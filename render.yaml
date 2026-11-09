@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: uiu-project-showcase
+    env: php
+    plan: free
+    rootDir: project_showcase
+    buildCommand: ""
+    startCommand: php -S 0.0.0.0:$PORT -t public
+    envVars:
+      - key: USE_CLOUD_DB
+        value: "1"
+      - key: DB_HOST
+        value: gateway01.ap-southeast-1.prod.aws.tidbcloud.com
+      - key: DB_PORT
+        value: "4000"
+      - key: DB_NAME
+        value: test
+      - key: DB_USER
+        value: 22ydzKbVH35butT.root
+      - key: DB_PASS
+        value: F33m6ntRoE78q7vC
