@@ -64,7 +64,8 @@ function getDBConnection(): PDO {
         // Handle TiDB Cloud SSL requirement
         if (defined('DB_IS_CLOUD') && DB_IS_CLOUD) {
             $caPaths = [
-                '/etc/ssl/cert.pem',
+                '/etc/ssl/certs/ca-certificates.crt', // Standard Linux / Debian CA
+                '/etc/ssl/cert.pem',                  // macOS / Alpine
                 '/etc/ssl/certs/cacert.pem',
                 '/usr/local/etc/openssl/cert.pem',
                 '/opt/homebrew/etc/openssl@3/cert.pem'
