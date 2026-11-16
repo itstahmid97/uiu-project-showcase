@@ -39,6 +39,8 @@ try {
     $demoUrl      = isset($input['demo_url']) && !empty(trim($input['demo_url'])) ? trim($input['demo_url']) : null;
     $leaderName   = isset($input['leader_name']) ? trim($input['leader_name']) : '';
     $leaderId     = isset($input['leader_id']) ? trim($input['leader_id']) : '';
+    $advisorName  = isset($input['advisor_name']) ? trim($input['advisor_name']) : '';
+    $advisorEmail = isset($input['advisor_email']) ? trim($input['advisor_email']) : '';
     $supervisorId = isset($input['supervisor_id']) && is_numeric($input['supervisor_id']) ? (int)$input['supervisor_id'] : null;
     $awardTitle   = isset($input['award_title']) ? trim($input['award_title']) : 'None';
     $prizeMoney   = isset($input['prize_money']) && is_numeric($input['prize_money']) ? (float)$input['prize_money'] : 0.00;
@@ -108,6 +110,47 @@ try {
             ':email' => $cleanEmail
         ]);
         $leaderUserId = (int)$pdo->lastInsertId();
+    }
+
+    // 1b. Resolve or Insert Faculty Advisor / Supervisor
+    if (!empty($advisorName) || !empty($advisorEmail)) {
+        if (empty($advisorEmail)) {
+            $nameSlug = strtolower(preg_replace('/[^a-zA-Z0-9]/', '', $advisorName));
+            $advisorEmail = substr($nameSlug, 0, 15) . '@faculty.uiu.ac.bd';
+        }
+
+        // Check if supervisor already exists by email OR full_name
+        $supStmt = $pdo->prepare("SELECT user_id, role, full_name, email FROM users WHERE email = :email OR (role = 'faculty' AND full_name = :name) LIMIT 1");
+        $supStmt->execute([
+            ':email' => $advisorEmail,
+            ':name'  => $advisorName
+        ]);
+        $existingSup = $supStmt->fetch();
+
+        if ($existingSup) {
+            $supervisorId = (int)$existingSup['user_id'];
+        } else {
+            // Fetch dept_id of selected course
+            $deptStmt = $pdo->prepare("SELECT dept_id FROM courses WHERE course_id = :cid LIMIT 1");
+            $deptStmt->execute([':cid' => $courseId]);
+            $courseRow = $deptStmt->fetch();
+            $deptId = $courseRow && !empty($courseRow['dept_id']) ? (int)$courseRow['dept_id'] : 1;
+
+            // Generate unique faculty ID code e.g. FAC-4B82
+            $facultyCode = 'FAC-' . strtoupper(substr(md5($advisorEmail . microtime(true)), 0, 6));
+
+            $insertSupStmt = $pdo->prepare("
+                INSERT INTO users (student_or_faculty_id, full_name, email, role, password_hash, dept_id)
+                VALUES (:sid, :name, :email, 'faculty', '$2y$10$wE96X1vQz76RkKxO2x6Lzuxl6M2m8v6BskjQyZ3d4y2m4f7H5r6X2', :dept_id)
+            ");
+            $insertSupStmt->execute([
+                ':sid'     => $facultyCode,
+                ':name'    => !empty($advisorName) ? $advisorName : 'Faculty Advisor',
+                ':email'   => $advisorEmail,
+                ':dept_id' => $deptId
+            ]);
+            $supervisorId = (int)$pdo->lastInsertId();
+        }
     }
 
     // 2. Insert Project (Trigger 4 trg_audit_project_created will automatically fire here)

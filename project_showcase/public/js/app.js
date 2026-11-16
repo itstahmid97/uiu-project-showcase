@@ -204,6 +204,16 @@ class ShowcaseApp {
         document.getElementById('new-project-tech')?.addEventListener('input', () => {
             this.renderModalTechSuggestions();
         });
+        // Faculty Advisor manual input auto-fill email from suggestion if matched
+        const advisorNameInput = document.getElementById('new-project-advisor-name');
+        const advisorEmailInput = document.getElementById('new-project-advisor-email');
+        advisorNameInput?.addEventListener('input', () => {
+            const val = advisorNameInput.value.trim().toLowerCase();
+            const match = this.supervisors.find(s => s.full_name.toLowerCase() === val);
+            if (match && advisorEmailInput && !advisorEmailInput.value) {
+                advisorEmailInput.value = match.email;
+            }
+        });
         // Form submits
         document.getElementById('add-project-form')?.addEventListener('submit', (e) => this.submitProject(e));
         document.getElementById('add-course-form')?.addEventListener('submit', (e) => this.submitCourse(e));
@@ -336,14 +346,22 @@ class ShowcaseApp {
             });
             modalCourseSelect.innerHTML = html;
         }
-        // Modal supervisor dropdown
-        const modalSupervisorSelect = document.getElementById('new-project-supervisor');
-        if (modalSupervisorSelect) {
-            let html = '<option value="">Select Faculty Advisor (Optional)</option>';
+        // Modal advisor datalists
+        const advisorNameDatalist = document.getElementById('advisor-name-list');
+        const advisorEmailDatalist = document.getElementById('advisor-email-list');
+        if (advisorNameDatalist) {
+            let nameOptions = '';
             this.supervisors.forEach(s => {
-                html += `<option value="${s.user_id}">${s.full_name} (${s.email})</option>`;
+                nameOptions += `<option value="${this.escapeHtml(s.full_name)}">${this.escapeHtml(s.email)}</option>`;
             });
-            modalSupervisorSelect.innerHTML = html;
+            advisorNameDatalist.innerHTML = nameOptions;
+        }
+        if (advisorEmailDatalist) {
+            let emailOptions = '';
+            this.supervisors.forEach(s => {
+                emailOptions += `<option value="${this.escapeHtml(s.email)}">${this.escapeHtml(s.full_name)}</option>`;
+            });
+            advisorEmailDatalist.innerHTML = emailOptions;
         }
         // Trimester filter dropdown
         const trimesterSelect = document.getElementById('trimester-filter');
@@ -790,7 +808,8 @@ class ShowcaseApp {
         const titleInput = document.getElementById('new-project-title');
         const courseSelect = document.getElementById('new-project-course');
         const trimesterSelect = document.getElementById('new-project-trimester');
-        const supervisorSelect = document.getElementById('new-project-supervisor');
+        const advisorNameInput = document.getElementById('new-project-advisor-name');
+        const advisorEmailInput = document.getElementById('new-project-advisor-email');
         const abstractInput = document.getElementById('new-project-abstract');
         const techInput = document.getElementById('new-project-tech');
         const githubInput = document.getElementById('new-project-github');
@@ -806,7 +825,8 @@ class ShowcaseApp {
             title: titleInput.value.trim(),
             course_id: parseInt(courseSelect.value, 10),
             trimester_id: parseInt(trimesterSelect.value, 10),
-            supervisor_id: supervisorSelect && supervisorSelect.value ? parseInt(supervisorSelect.value, 10) : null,
+            advisor_name: advisorNameInput ? advisorNameInput.value.trim() : '',
+            advisor_email: advisorEmailInput ? advisorEmailInput.value.trim() : '',
             abstract: abstractInput.value.trim(),
             tech_stack: techInput.value.trim(),
             github_url: githubInput ? githubInput.value.trim() : '',

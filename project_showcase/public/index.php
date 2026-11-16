@@ -423,13 +423,24 @@
             </div>
           </div>
 
-          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <label for="new-project-supervisor" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Faculty Advisor</label>
-              <select id="new-project-supervisor" class="w-full text-xs px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-orange-500 dark:text-white focus:outline-none">
-                <!-- Populated dynamically -->
-              </select>
+              <label for="new-project-advisor-name" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Faculty Advisor Name</label>
+              <input type="text" id="new-project-advisor-name" list="advisor-name-list" placeholder="e.g. Prof. Dr. Mohammad Nurul Huda" class="w-full text-xs px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-orange-500 dark:text-white focus:outline-none">
+              <datalist id="advisor-name-list">
+                <!-- Dynamically populated -->
+              </datalist>
             </div>
+            <div>
+              <label for="new-project-advisor-email" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Faculty Advisor Email</label>
+              <input type="email" id="new-project-advisor-email" list="advisor-email-list" placeholder="e.g. huda@cse.uiu.ac.bd" class="w-full text-xs px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-orange-500 dark:text-white focus:outline-none font-mono">
+              <datalist id="advisor-email-list">
+                <!-- Dynamically populated -->
+              </datalist>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
               <label for="new-project-award" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Award Distinction</label>
               <select id="new-project-award" class="w-full text-xs px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-orange-500 dark:text-white focus:outline-none">
