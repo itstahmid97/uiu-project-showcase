@@ -578,7 +578,7 @@ class ShowcaseApp {
             <div class="mt-3 p-3 bg-amber-50/70 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800/40 rounded-xl flex items-center justify-between">
               <div>
                 <h4 class="text-xs font-bold text-amber-900 dark:text-amber-200">${p.award?.award_title} Distinction</h4>
-                <p class="text-[11px] text-amber-800 dark:text-amber-400">${p.award?.remarks || 'Awarded at UIU Showcase'}</p>
+                <p class="text-[11px] text-amber-800 dark:text-amber-400">${p.award?.remarks || 'Awarded at UIU Project Showcase'}</p>
               </div>
               ${p.award?.prize_money ? `
                 <div class="text-right">
@@ -611,7 +611,7 @@ class ShowcaseApp {
           <!-- Faculty Project Advisor -->
           <div>
             <h4 class="text-[11px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-2">Faculty Project Advisor</h4>
-            <div class="p-3.5 bg-gradient-to-r from-orange-50/80 to-amber-50/50 dark:from-slate-800/80 dark:to-slate-800/40 rounded-xl border border-orange-200/80 dark:border-slate-700 flex items-center justify-between gap-3">
+            <div class="faculty-advisor-box p-3.5 bg-gradient-to-r from-orange-50/80 to-amber-50/50 dark:from-orange-950/20 dark:to-amber-950/10 rounded-xl border border-orange-200/80 dark:border-orange-800/40 flex items-center justify-between gap-3">
               <div class="flex items-center space-x-3 min-w-0">
                 <div class="w-10 h-10 rounded-full bg-orange-600 text-white font-bold flex items-center justify-center text-sm shadow-sm flex-shrink-0">
                   ${(p.supervisor ? p.supervisor.name : 'F').charAt(0)}

@@ -55,8 +55,18 @@ code, pre, .font-mono {
   will-change: transform;
 }
 .dark .ambient-orb {
-  opacity: 0.35;
-  filter: blur(85px);
+  opacity: 0.44;
+  filter: blur(80px);
+  mix-blend-mode: screen;
+}
+.dark .orb-orange {
+  background: radial-gradient(circle, #f97316 0%, #ea580c 55%, transparent 75%);
+}
+.dark .orb-amber {
+  background: radial-gradient(circle, #fbbf24 0%, #d97706 55%, transparent 75%);
+}
+.dark .orb-purple {
+  background: radial-gradient(circle, #818cf8 0%, #4f46e5 55%, transparent 75%);
 }
 
 /* Floating animation keyframes */
@@ -148,9 +158,10 @@ code, pre, .font-mono {
   transition: background-color 0.2s ease, border-color 0.2s ease;
 }
 .dark .glass-header {
-  background: rgba(15, 23, 42, 0.82);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
+  background: rgba(9, 13, 22, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom-color: rgba(255, 255, 255, 0.08);
 }
 
 /* ==========================================================================
@@ -289,4 +300,105 @@ code, pre, .font-mono {
 }
 .dark ::-webkit-scrollbar-thumb:hover {
   background: #475569;
+}
+
+/* ==========================================================================
+   ADVANCED DARK MODE PALETTE (Midnight Onyx & UIU Glow)
+   ========================================================================== */
+html.dark,
+.dark body {
+  background-color: #090d16 !important;
+  color: #f1f5f9;
+}
+
+/* Dark mode seamless Hero */
+.dark .hero-section {
+  background: rgba(9, 13, 22, 0.35) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07) !important;
+}
+
+/* Dark mode Stat Cards */
+.dark .stat-card {
+  background: rgba(15, 23, 42, 0.65) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.06);
+}
+
+/* Dark mode Hero Search Input */
+.dark #hero-search-input {
+  background-color: rgba(15, 23, 42, 0.85) !important;
+  border-color: rgba(255, 255, 255, 0.12) !important;
+  color: #f8fafc !important;
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.35);
+}
+.dark #hero-search-input:focus {
+  border-color: #f97316 !important;
+  box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.25), 0 4px 20px -2px rgba(0, 0, 0, 0.4) !important;
+}
+
+/* Dark mode Filter Container */
+.dark .catalog-filter-card {
+  background: rgba(15, 23, 42, 0.75) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  backdrop-filter: blur(14px);
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+}
+.dark .catalog-filter-card select {
+  background-color: #0b0f19 !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  color: #f1f5f9 !important;
+}
+.dark .catalog-filter-card select:focus {
+  border-color: #f97316 !important;
+  box-shadow: 0 0 0 2px rgba(249, 115, 22, 0.3) !important;
+}
+
+/* Dark mode Project Cards */
+.dark .project-card {
+  background: #0f172a !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.4), inset 0 1px 0 0 rgba(255, 255, 255, 0.04);
+}
+.dark .project-card:hover {
+  background: #131d35 !important;
+  border-color: rgba(249, 115, 22, 0.55) !important;
+  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.75), 0 0 25px -4px rgba(249, 115, 22, 0.22) !important;
+  transform: translateY(-5px);
+}
+
+/* Dark mode Modals */
+.dark .modal-dialog-panel {
+  background: #0d121f !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.9), 0 0 35px -8px rgba(249, 115, 22, 0.15) !important;
+}
+
+/* Faculty Advisor Card in Details Modal - Dark Mode */
+.dark .faculty-advisor-box {
+  background: linear-gradient(135deg, rgba(234, 88, 12, 0.14) 0%, rgba(245, 158, 11, 0.05) 100%) !important;
+  border: 1px solid rgba(249, 115, 22, 0.32) !important;
+  box-shadow: 0 4px 20px -3px rgba(234, 88, 12, 0.14);
+}
+
+/* Dark mode Form Controls */
+.dark select,
+.dark input[type="text"],
+.dark input[type="number"],
+.dark textarea {
+  background-color: #0b0f19 !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  color: #f1f5f9 !important;
+}
+.dark select:focus,
+.dark input[type="text"]:focus,
+.dark input[type="number"]:focus,
+.dark textarea:focus {
+  border-color: #f97316 !important;
+  box-shadow: 0 0 0 2px rgba(249, 115, 22, 0.3) !important;
+}
+
+/* Dark mode Footer */
+.dark footer {
+  background: #070a11 !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.07) !important;
 }

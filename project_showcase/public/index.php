@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>UIU Project Showcase & Research Archive | CSE 3522</title>
+  <title>UIU Project Showcase — Academic & Research Archive | CSE 3522</title>
 
   <!-- Tailwind CSS 3.4 CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -33,7 +33,7 @@
   <!-- Custom Stylesheet -->
   <link rel="stylesheet" href="css/style.css">
 </head>
-<body class="bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 min-h-screen flex flex-col antialiased selection:bg-orange-500 selection:text-white transition-colors duration-200 relative">
+<body class="bg-slate-50 dark:bg-[#090d16] text-slate-800 dark:text-slate-100 min-h-screen flex flex-col antialiased selection:bg-orange-500 selection:text-white transition-colors duration-200 relative">
 
   <!-- Ambient Moving Background Elements (Inspired by UIU UCAM Cloud) -->
   <div class="ambient-bg-container" aria-hidden="true">
@@ -57,8 +57,8 @@
           </svg>
         </div>
         <div class="min-w-0">
-          <span class="text-sm sm:text-base font-bold tracking-tight text-slate-900 dark:text-white">UIU <span class="text-orange-600">Showcase</span></span>
-          <p class="text-[10px] sm:text-[11px] text-slate-500 dark:text-slate-400 font-medium hidden sm:block">Project & Research Archive</p>
+          <span class="text-sm sm:text-base font-bold tracking-tight text-slate-900 dark:text-white">UIU Project <span class="text-orange-600 dark:text-orange-500">Showcase</span></span>
+          <p class="text-[10px] sm:text-[11px] text-slate-500 dark:text-slate-400 font-medium hidden sm:block">Academic & Research Archive</p>
         </div>
       </a>
 
@@ -99,9 +99,9 @@
   <!-- ========================================== -->
   <!-- Hero Section                               -->
   <!-- ========================================== -->
-  <section class="relative bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 overflow-hidden py-10 md:py-16">
+  <section class="hero-section relative bg-white/70 dark:bg-transparent backdrop-blur-[2px] border-b border-slate-200 dark:border-slate-800/80 overflow-hidden py-10 md:py-16">
     <!-- Background Pattern & Subtle Glow -->
-    <div class="absolute inset-0 bg-grid-pattern opacity-60 pointer-events-none"></div>
+    <div class="absolute inset-0 bg-grid-pattern opacity-60 dark:opacity-30 pointer-events-none"></div>
     <div class="hero-glow"></div>
 
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full min-w-0">
@@ -109,17 +109,17 @@
         <!-- University Badge -->
         <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-orange-50 text-orange-700 dark:bg-orange-950/60 dark:text-orange-300 border border-orange-200 dark:border-orange-800/60 mb-4 max-w-full">
           <span class="w-2 h-2 rounded-full bg-orange-500 animate-pulse flex-shrink-0"></span>
-          <span class="truncate">UIU • Research & Engineering Archive</span>
+          <span class="truncate">UIU • Academic & Research Archive</span>
         </div>
 
         <!-- Headline -->
         <h1 class="text-2xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-tight">
-          Student Project Showcase & <span class="text-orange-600">Innovation Archive</span>
+          UIU Project Showcase & <span class="text-orange-600 dark:text-orange-500">Research Archive</span>
         </h1>
 
         <!-- Extensible Subtitle (No hardcoded course lists) -->
         <p class="mt-3 text-xs sm:text-base text-slate-600 dark:text-slate-400 leading-relaxed max-w-2xl">
-          A centralized university repository to search, review, and evaluate student capstone and laboratory projects across all departments and academic trimesters.
+          A centralized university repository to search, explore, and evaluate student capstone and laboratory projects across all academic departments and trimesters.
         </p>
 
         <!-- Search Bar -->
@@ -139,28 +139,28 @@
       <!-- Quick Metrics Strip -->
       <div class="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 mt-10 pt-8 border-t border-slate-100 dark:border-slate-800/80">
         <!-- Metric 1 -->
-        <div class="p-4 rounded-xl bg-slate-50/80 dark:bg-slate-800/40 border border-slate-200/80 dark:border-slate-800">
+        <div class="stat-card p-4 rounded-xl bg-slate-50/80 dark:bg-slate-900/60 border border-slate-200/80 dark:border-slate-800 backdrop-blur-sm">
           <p class="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Archived Projects</p>
           <h3 id="stat-total-projects" class="text-2xl font-black text-slate-900 dark:text-white mt-1">--</h3>
           <p class="text-[11px] text-slate-400 mt-0.5">Across All Trimesters</p>
         </div>
 
         <!-- Metric 2 -->
-        <div class="p-4 rounded-xl bg-slate-50/80 dark:bg-slate-800/40 border border-slate-200/80 dark:border-slate-800">
+        <div class="stat-card p-4 rounded-xl bg-slate-50/80 dark:bg-slate-900/60 border border-slate-200/80 dark:border-slate-800 backdrop-blur-sm">
           <p class="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Capstone Vault</p>
           <h3 id="stat-total-fydp" class="text-2xl font-black text-blue-600 dark:text-blue-400 mt-1">--</h3>
           <p class="text-[11px] text-slate-400 mt-0.5">Final Year Projects</p>
         </div>
 
         <!-- Metric 3 -->
-        <div class="p-4 rounded-xl bg-slate-50/80 dark:bg-slate-800/40 border border-slate-200/80 dark:border-slate-800">
+        <div class="stat-card p-4 rounded-xl bg-slate-50/80 dark:bg-slate-900/60 border border-slate-200/80 dark:border-slate-800 backdrop-blur-sm">
           <p class="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Award Winners</p>
           <h3 id="stat-total-winners" class="text-2xl font-black text-amber-500 dark:text-amber-400 mt-1">--</h3>
           <p class="text-[11px] text-slate-400 mt-0.5">Showcase Honors</p>
         </div>
 
         <!-- Metric 4 -->
-        <div class="p-4 rounded-xl bg-slate-50/80 dark:bg-slate-800/40 border border-slate-200/80 dark:border-slate-800">
+        <div class="stat-card p-4 rounded-xl bg-slate-50/80 dark:bg-slate-900/60 border border-slate-200/80 dark:border-slate-800 backdrop-blur-sm">
           <p class="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Prize Grants</p>
           <h3 id="stat-total-prize" class="text-2xl font-black text-emerald-600 dark:text-emerald-400 mt-1">--</h3>
           <p class="text-[11px] text-slate-400 mt-0.5">Award Funding (BDT)</p>
@@ -175,7 +175,7 @@
   <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
 
     <!-- Unified Filters Toolbar -->
-    <div class="p-4 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
+    <div class="catalog-filter-card p-4 bg-white dark:bg-slate-900/80 backdrop-blur-sm rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
       <div class="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
         <div class="flex items-center gap-2">
           <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
@@ -262,13 +262,13 @@
   </main>
 
   <!-- ========================================== -->
-  <!-- Project Details Modal (NO Supervisor)      -->
+  <!-- Project Details Modal                      -->
   <!-- ========================================== -->
   <div id="project-detail-modal" class="fixed inset-0 z-50 hidden overflow-y-auto" role="dialog" aria-modal="true">
     <div id="detail-modal-backdrop" class="fixed inset-0 bg-slate-950/70 backdrop-blur-sm transition-opacity"></div>
 
     <div class="flex min-h-full items-center justify-center p-3 sm:p-4 text-center">
-      <div class="relative transform overflow-hidden rounded-2xl bg-white dark:bg-slate-900 text-left shadow-2xl transition-all w-full max-w-3xl lg:max-w-4xl border border-slate-200 dark:border-slate-800 my-4 sm:my-8 animate-modal-pop">
+      <div class="modal-dialog-panel relative transform overflow-hidden rounded-2xl bg-white dark:bg-slate-900 text-left shadow-2xl transition-all w-full max-w-3xl lg:max-w-4xl border border-slate-200 dark:border-slate-800 my-4 sm:my-8 animate-modal-pop">
         <!-- Close Button -->
         <button id="close-detail-modal-btn" class="absolute top-4 right-4 text-slate-400 hover:text-slate-700 dark:hover:text-white p-2 rounded-xl bg-slate-100 dark:bg-slate-800 transition z-10">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -290,7 +290,7 @@
     <div id="viva-modal-backdrop" class="fixed inset-0 bg-slate-950/70 backdrop-blur-sm transition-opacity"></div>
 
     <div class="flex min-h-full items-center justify-center p-2 sm:p-4 text-center">
-      <div class="relative transform overflow-hidden rounded-2xl bg-white dark:bg-slate-900 text-left shadow-2xl transition-all w-full max-w-5xl border border-slate-200 dark:border-slate-800 flex flex-col max-h-[92vh] my-2 sm:my-6 animate-modal-pop">
+      <div class="modal-dialog-panel relative transform overflow-hidden rounded-2xl bg-white dark:bg-slate-900 text-left shadow-2xl transition-all w-full max-w-5xl border border-slate-200 dark:border-slate-800 flex flex-col max-h-[92vh] my-2 sm:my-6 animate-modal-pop">
         
         <!-- Modal Header -->
         <div class="p-4 sm:p-5 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between gap-3">
@@ -357,7 +357,7 @@
     <div class="fixed inset-0 bg-slate-950/70 backdrop-blur-sm transition-opacity"></div>
 
     <div class="flex min-h-full items-center justify-center p-4 text-center">
-      <div class="relative transform overflow-hidden rounded-2xl bg-white dark:bg-slate-900 text-left shadow-2xl transition-all w-full max-w-md border border-slate-200 dark:border-slate-800 p-6 animate-modal-pop">
+      <div class="modal-dialog-panel relative transform overflow-hidden rounded-2xl bg-white dark:bg-slate-900 text-left shadow-2xl transition-all w-full max-w-md border border-slate-200 dark:border-slate-800 p-6 animate-modal-pop">
         <button id="close-add-course-btn" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 dark:hover:text-white p-1 rounded-lg">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
@@ -410,13 +410,13 @@
   </div>
 
   <!-- ========================================== -->
-  <!-- Submit Project Modal (NO Supervisor)       -->
+  <!-- Submit Project Modal                       -->
   <!-- ========================================== -->
   <div id="add-project-modal" class="fixed inset-0 z-50 hidden overflow-y-auto" role="dialog" aria-modal="true">
     <div id="add-project-backdrop" class="fixed inset-0 bg-slate-950/70 backdrop-blur-sm transition-opacity"></div>
 
     <div class="flex min-h-full items-center justify-center p-3 sm:p-4 text-center">
-      <div class="relative transform overflow-hidden rounded-2xl bg-white dark:bg-slate-900 text-left shadow-2xl transition-all w-full max-w-xl border border-slate-200 dark:border-slate-800 p-5 sm:p-6 my-4 animate-modal-pop">
+      <div class="modal-dialog-panel relative transform overflow-hidden rounded-2xl bg-white dark:bg-slate-900 text-left shadow-2xl transition-all w-full max-w-xl border border-slate-200 dark:border-slate-800 p-5 sm:p-6 my-4 animate-modal-pop">
         <button id="close-add-project-btn" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 dark:hover:text-white p-1 rounded-lg">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
@@ -527,11 +527,11 @@
   <!-- ========================================== -->
   <!-- Clean Footer                               -->
   <!-- ========================================== -->
-  <footer class="mt-auto border-t border-slate-200 dark:border-slate-800/80 bg-white dark:bg-slate-900 py-6 text-xs text-slate-500 dark:text-slate-400">
+  <footer class="mt-auto border-t border-slate-200 dark:border-slate-800/80 bg-white dark:bg-[#070a11] py-6 text-xs text-slate-500 dark:text-slate-400">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
       <div>
-        <p class="font-bold text-slate-800 dark:text-slate-200">UIU Project Showcase & Archive System</p>
-        <p class="text-[11px] text-slate-400">Department of Computer Science & Engineering • United International University</p>
+        <p class="font-bold text-slate-900 dark:text-slate-100">UIU Project Showcase</p>
+        <p class="text-[11px] text-slate-500 dark:text-slate-400">Academic & Research Archive • Department of Computer Science & Engineering, UIU</p>
       </div>
       <div class="text-[11px] text-slate-400 sm:text-right">
         <p class="font-mono text-orange-600 dark:text-orange-400">CSE 3522: Database Management Systems Laboratory</p>
