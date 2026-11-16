@@ -4,7 +4,13 @@
 -- CSE 3522: Database Management Systems Laboratory
 -- Final Project Database Schema & Dataset Specification
 -- Project Title: UIU Project Showcase & Archive System
--- Lead Database Architect & Senior Full-Stack Engineer Specification
+-- Course: CSE 3522 — Database Management Systems Laboratory
+-- Trimester: Fall 2026 | Section: P
+-- Group Members:
+--   1. S M Tahmid Hasan Shahria (ID: 011 221 002)
+--   2. Tanvir Ahmed (ID: 011 221 001)
+--   3. Farzana Akter (ID: 011 221 003)
+-- Submitted To: Abu Bakar Fahad / Didarul Islam Didar
 -- Target Environment: MySQL 8.0+ / MariaDB 10.4+ (XAMPP Environment)
 -- ==============================================================================
 

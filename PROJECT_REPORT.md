@@ -71,8 +71,9 @@ Every trimester at UIU, hundreds of undergraduate engineering students produce h
 A 3NF normalized, relational database system providing:
 - Fast multi-criteria search and filtering by Course, Trimester, Award, and Technology Tags.
 - Automatic enforcement of UIU academic policies via database triggers (e.g., maximum team size $\le 4$, non-empty titles, immutable award seals).
+- Robust relational architecture maintaining referential integrity across 9 tables.
 - Comprehensive institutional audit trail tracking every submission and status transition.
-- Dual deployment: Localhost via XAMPP MySQL and 24/7 cloud persistence via TiDB Serverless Cloud.
+- Single-click deployment on XAMPP Localhost via MySQL 8.0+ and phpMyAdmin.
 
 ---
 
@@ -111,7 +112,7 @@ A 3NF normalized, relational database system providing:
 ### 5.2 Non-Functional Requirements
 - **Security:** Prepared statements with PDO to eliminate SQL Injection (SQLi).
 - **Performance:** Sub-10ms query execution on indexed queries.
-- **Portability:** Seamless switching between local XAMPP and TiDB Cloud.
+- **Portability:** Seamless execution on any standard XAMPP stack (Windows, macOS, Linux).
 
 ### 5.3 Hardware Requirements
 - **Processor:** Intel Core i3 / Apple Silicon M1 or higher
@@ -120,7 +121,7 @@ A 3NF normalized, relational database system providing:
 
 ### 5.4 Software Requirements
 - **Operating System:** macOS / Windows 10/11 / Ubuntu Linux
-- **Database Server:** MySQL 8.0+ / TiDB Cloud Serverless (MySQL 8.0 wire-compatible)
+- **Database Server:** MySQL 8.0+ / MariaDB 10.4+ (XAMPP Environment)
 - **Web Server:** Apache 2.4+ (via XAMPP) / PHP Built-in Server
 - **Backend:** Pure PHP 8.2+ with PDO
 - **Frontend:** TypeScript, Tailwind CSS, Modern HTML5
@@ -242,7 +243,7 @@ Transitive functional dependencies ($X \rightarrow Y \rightarrow Z$) are elimina
 ---
 
 ## 13. Results and Discussion
-The platform was benchmarked locally on XAMPP and in the cloud on TiDB Serverless. 
+The platform was benchmarked locally on XAMPP MySQL 8.0+. 
 - Composite index `idx_projects_course_trimester` reduced table scan cost from `ALL` (200 rows) to `ref` (4 rows), achieving a **~50x query execution speedup**.
 - Trigger `trg_enforce_team_size_limit` successfully halted unauthorized 5th member registrations by throwing standard SQLState 45000 exceptions.
 - View `vw_public_student_projects` successfully blocked sensitive password hashes from public UI consumption.
@@ -251,7 +252,7 @@ The platform was benchmarked locally on XAMPP and in the cloud on TiDB Serverles
 
 ## 14. Limitations
 - Does not yet include live automated plagiarism checking of submitted source code.
-- Cloud free-tier instances may experience cold-start latency (~200ms) after long periods of inactivity.
+- Localhost environment requires active local Apache and MySQL daemons to run.
 
 ---
 
@@ -270,7 +271,7 @@ The **UIU Project Showcase & Archive System** successfully fulfills all technica
 
 | Student Name | Student ID | Specific Contribution |
 | :--- | :--- | :--- |
-| **S M Tahmid Hasan Shahria** | `011 221 002` | Database 3NF Architecture, Trigger Implementation, TiDB Cloud Migration, and Viva Voce Query Explorer Engine |
+| **S M Tahmid Hasan Shahria** | `011 221 002` | Database 3NF Architecture, Trigger Implementation, SQL Performance Tuning, and Viva Voce Query Explorer Engine |
 | **Tanvir Ahmed** | `011 221 001` | Backend PHP PDO API Development, Security Prepared Statements, and Seed Dataset Curation |
 | **Farzana Akter** | `011 221 003` | Frontend TypeScript & Tailwind UI Development, Filter Synchronization, and Comprehensive Project Report Writing |
 

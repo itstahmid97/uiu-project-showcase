@@ -37,14 +37,14 @@ The **UIU Project Showcase & Archive System** is a production-ready, enterprise-
 
 ## 🎓 Target Courses & Trimesters
 
-The platform archives projects for the following university courses:
-- **`CSE 3522`**: Database Management Systems Laboratory
-- **`CSE 4326`**: Microprocessors and Microcontrollers Laboratory (Hardware / Embedded IoT)
-- **`CSE 4000A`**: Final Year Design Project - I (FYDP-1 / Proposal & Prototype)
-- **`CSE 4000B`**: Final Year Design Project - II (FYDP-2 / Final Defense & Product)
-- *Extensible Lab Courses Included in Seed Data:*
-  - `CSE 4182`: Artificial Intelligence Laboratory
-  - `CSE 3812`: Computer Networks Laboratory
+The platform archives student projects for UIU showcase courses:
+- **`CSE 3412`**: System Analysis and Design Lab (SAD Lab)
+- **`CSE 4165`**: Web Programming
+- **`CSE 4326`**: Microprocessors and Microcontrollers Lab
+- **`EEE 2124`**: Electronics Lab
+- **`CSE 3812`**: Artificial Intelligence Lab (AI Lab)
+- **`CSE 4000 A`**: Final Year Design Project - I (FYDP-1)
+- **`CSE 4000 B`**: Final Year Design Project - II (FYDP-2)
 
 ### Trimesters Covered:
 - **Spring 2025 (`251`)**
