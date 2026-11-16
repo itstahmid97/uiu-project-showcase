@@ -12,19 +12,16 @@
 *(Varsity Project Showcase, Awards, and Idea Repository)*
 
 **Submitted By:**
-- [Student 1 Name] — ID: [Student ID] — Section: P
-- [Student 2 Name] — ID: [Student ID] — Section: P
-- [Student 3 Name] — ID: [Student ID] — Section: P
+- [Student 1 Name] — [ID] — [Section]
+- [Student 2 Name] — [ID] — [Section]
+- [Student 3 Name] — [ID] — [Section]
 
 **Submitted To:**
-- **Abu Bakar Fahad**  
-  *Lecturer, Department of Computer Science and Engineering (CSE)*  
-  *United International University (UIU)*  
-- **Didarul Islam Didar**  
-  *Lecturer, Department of Computer Science and Engineering (CSE)*  
+- [Faculty / Instructor Name]  
+  *Department of Computer Science and Engineering (CSE)*  
   *United International University (UIU)*  
 
-**Submission Date:** November 09, 2026  
+**Submission Date:** [Date]  
 
 ---
 

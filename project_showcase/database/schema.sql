@@ -5,8 +5,6 @@
 -- Final Project Database Schema & Dataset Specification
 -- Project Title: UIU Project Showcase & Archive System
 -- Course: CSE 3522 — Database Management Systems Laboratory
--- Trimester: Fall 2026 | Section: P
--- Submitted To: Abu Bakar Fahad / Didarul Islam Didar
 -- Target Environment: MySQL 8.0+ / MariaDB 10.4+ (XAMPP Environment)
 -- ==============================================================================
 
