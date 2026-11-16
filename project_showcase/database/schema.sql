@@ -27,12 +27,10 @@ DROP VIEW IF EXISTS `vw_public_student_projects`;
 DROP TRIGGER IF EXISTS `trg_check_empty_project_title`;
 DROP TRIGGER IF EXISTS `trg_enforce_team_size_limit`;
 DROP TRIGGER IF EXISTS `trg_prevent_past_award_modification`;
-DROP TRIGGER IF EXISTS `trg_audit_project_created`;
-DROP TRIGGER IF EXISTS `trg_audit_project_updated`;
-DROP TRIGGER IF EXISTS `trg_audit_project_deleted`;
+DROP TRIGGER IF EXISTS `trg_elevate_awarded_project_status`;
+DROP TRIGGER IF EXISTS `trg_revert_unawarded_project_status`;
 
 -- Drop existing tables in dependency order
-DROP TABLE IF EXISTS `project_audit_log`;
 DROP TABLE IF EXISTS `awards`;
 DROP TABLE IF EXISTS `showcase_events`;
 DROP TABLE IF EXISTS `project_members`;
@@ -177,20 +175,6 @@ CREATE TABLE `awards` (
     CONSTRAINT `fk_awards_event`
         FOREIGN KEY (`event_id`) REFERENCES `showcase_events` (`event_id`)
         ON UPDATE CASCADE ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- 9. Project Audit Log Table
--- Audit trail tracking administrative and operational actions on projects.
-CREATE TABLE `project_audit_log` (
-    `log_id` INT AUTO_INCREMENT PRIMARY KEY,
-    `action_type` VARCHAR(50) NOT NULL, -- e.g., 'PROJECT_CREATED', 'PROJECT_UPDATED', 'PROJECT_DELETED'
-    `project_id` INT DEFAULT NULL,
-    `performed_by` INT DEFAULT NULL,
-    `timestamp` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    `details` TEXT NOT NULL,
-    CONSTRAINT `fk_audit_user`
-        FOREIGN KEY (`performed_by`) REFERENCES `users` (`user_id`)
-        ON UPDATE CASCADE ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ==============================================================================
@@ -384,7 +368,7 @@ WHERE p.status IN ('Approved', 'Featured');
 CREATE USER IF NOT EXISTS 'app_admin'@'localhost' IDENTIFIED BY 'Admin@UIU2025!';
 GRANT ALL PRIVILEGES ON `uiu_project_showcase`.* TO 'app_admin'@'localhost';
 
--- Create Public Student Viewer (Restricted Read-Only Access, no access to audit log or users table)
+-- Create Public Student Viewer (Restricted Read-Only Access to approved public views)
 CREATE USER IF NOT EXISTS 'student_viewer'@'localhost' IDENTIFIED BY 'Student@UIU2025!';
 GRANT SELECT ON `uiu_project_showcase`.`vw_public_student_projects` TO 'student_viewer'@'localhost';
 GRANT SELECT ON `uiu_project_showcase`.`vw_hall_of_fame` TO 'student_viewer'@'localhost';
@@ -394,7 +378,6 @@ GRANT SELECT ON `uiu_project_showcase`.`trimesters` TO 'student_viewer'@'localho
 
 -- Explicitly revoke access to sensitive credentials
 REVOKE ALL PRIVILEGES ON `uiu_project_showcase`.`users` FROM 'student_viewer'@'localhost';
-REVOKE ALL PRIVILEGES ON `uiu_project_showcase`.`project_audit_log` FROM 'student_viewer'@'localhost';
 FLUSH PRIVILEGES;
 */
 
@@ -708,139 +691,7 @@ INSERT INTO `project_members` (`member_id`, `project_id`, `user_id`, `role_in_te
 (125, 35, 23, 'Member', 'Module development, interface styling, and testing'),
 (126, 35, 24, 'Member', 'Backend integration, API endpoints, and QA benchmarks');
 
--- 9. Insert Project Audit Log Records (125+ Rows to demonstrate realistic institutional audit history)
-INSERT INTO `project_audit_log` (`log_id`, `action_type`, `project_id`, `performed_by`, `timestamp`, `details`) VALUES
-(1, 'SYSTEM_INIT', NULL, 6, '2025-01-10 09:00:00', 'UIU Project Showcase Database initialized with 3NF relational schemas and security constraints.'),
-(2, 'PROJECT_CREATED', 1, 7, '2025-05-10 10:15:22', 'Project "UIU JontroDokan" registered for CSE 3412 (SAD Lab).'),
-(3, 'MEMBER_ADDED', 1, 7, '2025-05-10 10:16:05', 'Student Nahid Hasan (011 221 002) added as Member to UIU JontroDokan.'),
-(4, 'MEMBER_ADDED', 1, 7, '2025-05-10 10:16:45', 'Student Farzana Akter (011 221 003) added as Member to UIU JontroDokan.'),
-(5, 'MEMBER_ADDED', 1, 7, '2025-05-10 10:17:15', 'Student Suman Chakma (011 221 004) added as Member to UIU JontroDokan.'),
-(6, 'SUPERVISOR_ASSIGNED', 1, 4, '2025-05-11 11:30:00', 'Faculty Kazi Ashraful Alam assigned as Supervisor for Project ID 1.'),
-(7, 'STATUS_UPDATED', 1, 4, '2025-05-12 14:00:00', 'Project status updated from Submitted to Approved by Faculty Supervisor.'),
-(8, 'EVENT_REGISTERED', 1, 6, '2025-05-15 09:00:00', 'Project enrolled in showcase event "UIU CSE Project Showcase Spring 2025".'),
-(9, 'AWARD_GRANTED', 1, 6, '2025-05-18 16:30:00', 'Conferred "1st Prize" (BDT 15,000) for outstanding SAD architecture.'),
-(10, 'STATUS_UPDATED', 1, 6, '2025-05-18 17:00:00', 'Project status elevated to Featured following Showcase 1st Prize award.'),
-(11, 'PROJECT_CREATED', 2, 8, '2025-05-11 09:45:00', 'Project "UIU HRMS++" registered for CSE 3412.'),
-(12, 'MEMBER_ADDED', 2, 8, '2025-05-11 09:46:12', 'Student Mahfuzur Rahman added as Member to UIU HRMS++.'),
-(13, 'MEMBER_ADDED', 2, 8, '2025-05-11 09:47:00', 'Student Ayesha Siddiqua added as Member to UIU HRMS++.'),
-(14, 'SUPERVISOR_ASSIGNED', 2, 4, '2025-05-11 12:00:00', 'Faculty Kazi Ashraful Alam assigned as Supervisor for Project ID 2.'),
-(15, 'AWARD_GRANTED', 2, 6, '2025-05-18 16:35:00', 'Conferred "1st Prize" (BDT 15,000) in UIU Software & Web Innovations Showcase Summer 2025.'),
-(16, 'PROJECT_CREATED', 3, 9, '2025-09-10 11:00:00', 'Project "Online News Portal & Content Management System" registered for CSE 3412.'),
-(17, 'MEMBER_ADDED', 3, 9, '2025-09-10 11:05:00', 'Student Sadia Jahan added as Member to Online News Portal.'),
-(18, 'MEMBER_ADDED', 3, 9, '2025-09-10 11:06:00', 'Student Fahim Chowdhury added as Member to Online News Portal.'),
-(19, 'MEMBER_ADDED', 3, 9, '2025-09-10 11:07:00', 'Student Nusrat Zahan added as Member to Online News Portal.'),
-(20, 'STATUS_UPDATED', 3, 6, '2025-09-17 16:00:00', 'Archived under UIU SAD Project Repository.'),
-(21, 'PROJECT_CREATED', 4, 10, '2025-09-12 10:20:00', 'Project "UIU Hall Room Allocation & Student Billing" created for CSE 3412.'),
-(22, 'MEMBER_ADDED', 4, 10, '2025-09-12 10:22:00', 'Student Arifur Rahman Khan added as Member to Hall Room Allocation.'),
-(23, 'MEMBER_ADDED', 4, 10, '2025-09-12 10:23:00', 'Student Shakil Mahmud added as Member to Hall Room Allocation.'),
-(24, 'STATUS_UPDATED', 4, 6, '2025-09-17 16:15:00', 'Verified by course instructor for UIU SAD Lab.'),
-(25, 'PROJECT_CREATED', 5, 11, '2026-05-12 14:10:00', 'Project "UIU Central Sports Equipment Booking" registered for CSE 3412.'),
-(26, 'MEMBER_ADDED', 5, 11, '2026-05-12 14:15:00', 'Student Tasnim Hossain added as Member to Sports Equipment Booking.'),
-(27, 'MEMBER_ADDED', 5, 11, '2026-05-12 14:16:00', 'Student Zubair Al Mamun added as Member to Sports Equipment Booking.'),
-(28, 'STATUS_UPDATED', 5, 6, '2026-05-19 16:30:00', 'Project documentation approved by CSE Department.'),
-(29, 'PROJECT_CREATED', 6, 12, '2025-05-14 10:00:00', 'Project "ESP32 Automated Precision Irrigation with LoRa" registered for CSE 4326.'),
-(30, 'MEMBER_ADDED', 6, 12, '2025-05-14 10:05:00', 'Student Rifat Bin Alam added as Member to LoRa Irrigation team.'),
-(31, 'MEMBER_ADDED', 6, 12, '2025-05-14 10:06:00', 'Student Mehnaz Tabassum added as Member to LoRa Irrigation team.'),
-(32, 'MEMBER_ADDED', 6, 12, '2025-05-14 10:07:00', 'Student Kazi Mehedi Hasan added as Member to LoRa Irrigation team.'),
-(33, 'AWARD_GRANTED', 6, 6, '2025-05-20 17:00:00', 'Conferred "1st Prize" (BDT 15,000) in Microprocessors Hardware Fair Spring 2025.'),
-(34, 'PROJECT_CREATED', 7, 13, '2025-05-15 11:30:00', 'Project "STM32 Portable ECG & Heart Rate Telemetry Unit" created for CSE 4326.'),
-(35, 'MEMBER_ADDED', 7, 13, '2025-05-15 11:35:00', 'Student Jannatul Ferdous added to STM32 ECG Monitor.'),
-(36, 'MEMBER_ADDED', 7, 13, '2025-05-15 11:36:00', 'Student Shariful Islam added to STM32 ECG Monitor.'),
-(37, 'AWARD_GRANTED', 7, 6, '2025-05-20 17:15:00', 'Conferred "2nd Prize" (BDT 10,000) in Microprocessors Hardware Fair Spring 2025.'),
-(38, 'PROJECT_CREATED', 8, 14, '2026-01-18 10:00:00', 'Project "Smart Campus Parking Sentinel" registered for CSE 4326.'),
-(39, 'MEMBER_ADDED', 8, 14, '2026-01-18 10:05:00', 'Student Rumana Haque added to Parking Sentinel team.'),
-(40, 'MEMBER_ADDED', 8, 14, '2026-01-18 10:06:00', 'Student Syed Asifur Rahman added to Parking Sentinel team.'),
-(41, 'AWARD_GRANTED', 8, 6, '2026-01-22 16:30:00', 'Conferred "1st Prize" (BDT 15,000) in Smart Hardware Expo Fall 2025.'),
-(42, 'PROJECT_CREATED', 9, 15, '2026-01-20 12:00:00', 'Project "Edge-AI Fall Detection Pendant" created for CSE 4326.'),
-(43, 'MEMBER_ADDED', 9, 15, '2026-01-20 12:05:00', 'Student Muntaha Binte Monir added to Edge-AI Fall Detection team.'),
-(44, 'MEMBER_ADDED', 9, 15, '2026-01-20 12:06:00', 'Student Abdullah Al Noman added to Edge-AI Fall Detection team.'),
-(45, 'AWARD_GRANTED', 9, 6, '2026-01-22 17:00:00', 'Conferred "Best Innovation" (BDT 12,000) in Smart Hardware Expo Fall 2025.'),
-(46, 'PROJECT_CREATED', 10, 16, '2026-05-16 11:00:00', 'Project "Autonomous Obstacle-Avoiding Disaster Rescue Rover" registered for CSE 4326.'),
-(47, 'MEMBER_ADDED', 10, 16, '2026-05-16 11:05:00', 'Student Shamaima Noor added to Rescue Rover team.'),
-(48, 'MEMBER_ADDED', 10, 16, '2026-05-16 11:06:00', 'Student Md. Sakibul Islam added to Rescue Rover team.'),
-(49, 'AWARD_GRANTED', 10, 6, '2026-05-22 16:30:00', 'Conferred "3rd Prize" (BDT 6,000) in NextGen Microcontroller Showcase Spring 2026.'),
-(50, 'PROJECT_CREATED', 11, 17, '2026-01-21 09:30:00', 'Project "Bangla OCR & Automated Exam Paper Grading System" registered for CSE 4000A.'),
-(51, 'MEMBER_ADDED', 11, 17, '2026-01-21 09:35:00', 'Student Priyanka Das added to Bangla OCR team.'),
-(52, 'MEMBER_ADDED', 11, 17, '2026-01-21 09:36:00', 'Student Shahadat Hossain added to Bangla OCR team.'),
-(53, 'AWARD_GRANTED', 11, 6, '2026-01-25 16:00:00', 'Conferred "Best FYDP" (BDT 20,000) in FYDP Prototype Showcase Fall 2025.'),
-(54, 'PROJECT_CREATED', 12, 18, '2026-01-22 10:15:00', 'Project "Blockchain-Backed Academic Transcript Verification" registered for CSE 4000A.'),
-(55, 'MEMBER_ADDED', 12, 18, '2026-01-22 10:20:00', 'Student Israt Jahan Eva added to Blockchain Transcript team.'),
-(56, 'MEMBER_ADDED', 12, 18, '2026-01-22 10:21:00', 'Student Anik Kumar Paul added to Blockchain Transcript team.'),
-(57, 'AWARD_GRANTED', 12, 6, '2026-01-25 16:30:00', 'Conferred "Honorable Mention" (BDT 5,000) in FYDP Prototype Showcase Fall 2025.'),
-(58, 'PROJECT_CREATED', 13, 19, '2026-11-10 13:00:00', 'Project "Smart Grid Energy Load Forecasting" registered for CSE 4000A.'),
-(59, 'MEMBER_ADDED', 13, 19, '2026-11-10 13:05:00', 'Student Maruf Hasan Emon added to Smart Grid team.'),
-(60, 'MEMBER_ADDED', 13, 19, '2026-11-10 13:06:00', 'Student Tanjina Akter added to Smart Grid team.'),
-(61, 'PROJECT_CREATED', 14, 20, '2025-09-08 09:00:00', 'Project "Autonomous Drone Swarm for Urban Disaster Search & Rescue" registered for CSE 4000B.'),
-(62, 'MEMBER_ADDED', 14, 20, '2025-09-08 09:05:00', 'Student Tanvir Ahmed joined Drone Swarm team as Member.'),
-(63, 'MEMBER_ADDED', 14, 20, '2025-09-08 09:06:00', 'Student Nahid Hasan joined Drone Swarm team as Member.'),
-(64, 'MEMBER_ADDED', 14, 20, '2025-09-08 09:07:00', 'Student Farzana Akter joined Drone Swarm team as Member.'),
-(65, 'AWARD_GRANTED', 14, 6, '2025-09-15 17:00:00', 'Conferred "Best FYDP" (BDT 25,000) in FYDP Final Defense Summer 2025.'),
-(66, 'PROJECT_CREATED', 15, 21, '2025-09-09 10:30:00', 'Project "AI-Powered Bangla Sign Language Translator" registered for CSE 4000B.'),
-(67, 'MEMBER_ADDED', 15, 21, '2025-09-09 10:35:00', 'Student Suman Chakma joined Sign Language Translator team.'),
-(68, 'MEMBER_ADDED', 15, 21, '2025-09-09 10:36:00', 'Student Mahfuzur Rahman joined Sign Language Translator team.'),
-(69, 'AWARD_GRANTED', 15, 6, '2025-09-15 17:30:00', 'Conferred "Best Innovation" (BDT 15,000) in FYDP Final Defense Summer 2025.'),
-(70, 'PROJECT_CREATED', 16, 22, '2026-09-10 11:00:00', 'Project "Telemedicine AI Screening Platform for Rural Bangladesh" registered for CSE 4000B.'),
-(71, 'MEMBER_ADDED', 16, 22, '2026-09-10 11:05:00', 'Student Ayesha Siddiqua joined Telemedicine AI team.'),
-(72, 'MEMBER_ADDED', 16, 22, '2026-09-10 11:06:00', 'Student Sadia Jahan joined Telemedicine AI team.'),
-(73, 'AWARD_GRANTED', 16, 6, '2026-09-18 17:00:00', 'Conferred "Best FYDP" (BDT 25,000) in FYDP Final Product Defense Summer 2026.'),
-(74, 'PROJECT_CREATED', 17, 23, '2025-09-11 12:00:00', 'Project "Bengali Conversational Bot for Mental Health Support" created for CSE 4182.'),
-(75, 'MEMBER_ADDED', 17, 23, '2025-09-11 12:05:00', 'Student Fahim Chowdhury joined Bangla Chatbot team.'),
-(76, 'MEMBER_ADDED', 17, 23, '2025-09-11 12:06:00', 'Student Nusrat Zahan joined Bangla Chatbot team.'),
-(77, 'AWARD_GRANTED', 17, 6, '2025-09-17 17:00:00', 'Conferred "Honorable Mention" (BDT 5,000) for Mental Health Bot in Summer 2025.'),
-(78, 'PROJECT_CREATED', 18, 24, '2026-09-12 14:00:00', 'Project "Automated Pneumonia Detection from Pediatric Chest X-Rays" created for CSE 4182.'),
-(79, 'MEMBER_ADDED', 18, 24, '2026-09-12 14:05:00', 'Student Arifur Rahman Khan joined Pediatric X-Ray ViT team.'),
-(80, 'MEMBER_ADDED', 18, 24, '2026-09-12 14:06:00', 'Student Shakil Mahmud joined Pediatric X-Ray ViT team.'),
-(81, 'PROJECT_CREATED', 19, 25, '2025-05-12 15:00:00', 'Project "Software Defined Network (SDN) DDoS Mitigation Shield" created for CSE 3812.'),
-(82, 'MEMBER_ADDED', 19, 25, '2025-05-12 15:05:00', 'Student Tasnim Hossain joined SDN DDoS Shield team.'),
-(83, 'MEMBER_ADDED', 19, 25, '2025-05-12 15:06:00', 'Student Zubair Al Mamun joined SDN DDoS Shield team.'),
-(84, 'PROJECT_CREATED', 20, 26, '2026-05-14 16:00:00', 'Project "Peer-to-Peer Encrypted File Sharing Protocol for Campus LAN" registered for CSE 3812.'),
-(85, 'MEMBER_ADDED', 20, 26, '2026-05-14 16:05:00', 'Student Rifat Bin Alam joined P2P File Sharing team.'),
-(86, 'MEMBER_ADDED', 20, 26, '2026-05-14 16:06:00', 'Student Mehnaz Tabassum joined P2P File Sharing team.'),
--- Logging transaction checkpoints, code reviews, and administrative audits to satisfy 125+ rows
-(87, 'CODE_REVIEW', 1, 4, '2025-05-12 15:30:00', 'Faculty review completed: ACID isolation level confirmed to REPEATABLE READ.'),
-(88, 'GIT_REPO_VERIFIED', 1, 4, '2025-05-13 10:00:00', 'Verified GitHub repository commits and commit frequency for all 4 team members.'),
-(89, 'DEMO_DEPLOYED', 1, 7, '2025-05-14 18:20:00', 'Live cloud staging instance deployed to UIU sub-domain.'),
-(90, 'CODE_REVIEW', 2, 4, '2025-05-13 14:00:00', 'Varsity bus routing GPS spatial queries reviewed and index coverage validated.'),
-(91, 'GIT_REPO_VERIFIED', 2, 4, '2025-05-14 11:00:00', 'GitHub repository branches verified; README documentation conforms to standard.'),
-(92, 'HARDWARE_BENCHMARK', 6, 1, '2025-05-16 14:00:00', 'LoRa telemetry packet loss rate clocked under 0.8% across 1.2km radius on UIU campus.'),
-(93, 'CIRCUIT_INSPECTION', 7, 2, '2025-05-17 11:30:00', 'Oscilloscope analysis verified ECG analog front-end 50Hz notch filter attenuation.'),
-(94, 'SAFETY_AUDIT', 14, 1, '2025-09-10 16:00:00', 'Autonomous multi-rotor fail-safe geofencing confirmed active on PX4 flight firmware.'),
-(95, 'MODEL_VALIDATION', 15, 3, '2025-09-11 15:00:00', 'Confusion matrix validation on 1,500 Bangla sign test sequences yielded 94.2% accuracy.'),
-(96, 'ETHICS_CLEARANCE', 16, 2, '2026-09-12 09:30:00', 'Institutional Review Board (IRB) ethical clearance logged for rural anonymized trial.'),
-(97, 'SCHEMA_OPTIMIZATION', 3, 5, '2025-09-13 11:00:00', 'Dining hall meal ledger schema normalized to BCNF for multi-trimester accounting.'),
-(98, 'LOAD_TEST', 4, 4, '2025-09-14 16:00:00', 'Apache JMeter load testing verified 500 concurrent alumni directory search requests.'),
-(99, 'IOT_CALIBRATION', 8, 1, '2026-01-20 10:00:00', 'Ultrasonic sensor threshold calibrated for variable vehicle clearance heights.'),
-(100, 'TINYML_INFERENCE_TEST', 9, 2, '2026-01-21 14:30:00', 'RP2040 TinyML fall detection inference latency clocked at 18 milliseconds.'),
-(101, 'ROVER_FIELD_TEST', 10, 1, '2026-05-18 15:00:00', 'Obstacle avoidance navigation verified over 25m simulated earthquake rubble course.'),
-(102, 'OCR_ACCURACY_CHECK', 11, 3, '2026-01-23 11:00:00', 'Bengali handwritten character word error rate (WER) verified at 6.4%.'),
-(103, 'SMART_CONTRACT_AUDIT', 12, 2, '2026-01-23 16:30:00', 'Slither static analyzer found zero re-entrancy vulnerabilities in transcript contract.'),
-(104, 'GRID_SIMULATION', 13, 3, '2026-11-12 14:00:00', 'LSTM power load predictions cross-referenced against DESCO 2024 consumption records.'),
-(105, 'NLP_SAFETY_EVAL', 17, 3, '2025-09-14 10:00:00', 'Bangla mental health chatbot response safety scored 99.1% on self-harm detection.'),
-(106, 'RADIOLOGY_REVIEW', 18, 3, '2026-09-14 16:00:00', 'Pediatric chest radiologist confirmed clinical validity of ViT attention maps.'),
-(107, 'FIREWALL_TEST', 19, 2, '2025-05-14 16:30:00', 'SDN controller drop rate verified at 100,000 packets/sec during simulated SYN flood.'),
-(108, 'THROUGHPUT_BENCHMARK', 20, 2, '2026-05-16 11:00:00', 'P2P file transfer achieved 920 Mbps sustained throughput across campus LAN switches.'),
-(109, 'FACULTY_APPROVAL', 1, 4, '2025-05-15 10:00:00', 'Final lab defense marks assigned: 98/100 by Course Instructor.'),
-(110, 'FACULTY_APPROVAL', 2, 4, '2025-05-15 10:30:00', 'Final lab defense marks assigned: 94/100 by Course Instructor.'),
-(111, 'FACULTY_APPROVAL', 6, 1, '2025-05-18 11:00:00', 'Hardware evaluation completed: 97/100 by Embedded Systems Lab Committee.'),
-(112, 'FACULTY_APPROVAL', 7, 2, '2025-05-18 11:30:00', 'Hardware evaluation completed: 93/100 by Embedded Systems Lab Committee.'),
-(113, 'FACULTY_APPROVAL', 14, 1, '2025-09-12 12:00:00', 'FYDP defense committee approved thesis defense with distinction (Grade: A+).'),
-(114, 'FACULTY_APPROVAL', 15, 3, '2025-09-12 12:30:00', 'FYDP defense committee approved thesis defense with distinction (Grade: A+).'),
-(115, 'FACULTY_APPROVAL', 3, 5, '2025-09-15 14:00:00', 'Final lab defense marks assigned: 96/100 by Course Instructor.'),
-(116, 'FACULTY_APPROVAL', 4, 4, '2025-09-15 14:30:00', 'Final lab defense marks assigned: 91/100 by Course Instructor.'),
-(117, 'FACULTY_APPROVAL', 8, 1, '2026-01-21 15:00:00', 'Hardware evaluation completed: 95/100 by Embedded Systems Lab Committee.'),
-(118, 'FACULTY_APPROVAL', 9, 2, '2026-01-21 15:30:00', 'Hardware evaluation completed: 96/100 by Embedded Systems Lab Committee.'),
-(119, 'FACULTY_APPROVAL', 11, 3, '2026-01-24 16:00:00', 'FYDP Phase 1 prototype approved by departmental scrutiny panel.'),
-(120, 'FACULTY_APPROVAL', 12, 2, '2026-01-24 16:30:00', 'FYDP Phase 1 prototype approved by departmental scrutiny panel.'),
-(121, 'FACULTY_APPROVAL', 5, 5, '2026-05-17 11:00:00', 'Final lab defense marks assigned: 92/100 by Course Instructor.'),
-(122, 'FACULTY_APPROVAL', 10, 1, '2026-05-20 14:00:00', 'Hardware evaluation completed: 89/100 by Embedded Systems Lab Committee.'),
-(123, 'FACULTY_APPROVAL', 16, 2, '2026-09-15 11:00:00', 'FYDP defense committee approved final defense with distinction (Grade: A+).'),
-(124, 'FACULTY_APPROVAL', 17, 3, '2025-09-15 16:00:00', 'AI Laboratory evaluation completed: 90/100 by Lab Instructor.'),
-(125, 'FACULTY_APPROVAL', 18, 3, '2026-09-15 16:30:00', 'AI Laboratory evaluation completed: 92/100 by Lab Instructor.'),
-(126, 'FACULTY_APPROVAL', 19, 2, '2025-05-15 15:00:00', 'Networks Laboratory evaluation completed: 93/100 by Lab Instructor.'),
-(127, 'FACULTY_APPROVAL', 20, 2, '2026-05-18 16:00:00', 'Networks Laboratory evaluation completed: 94/100 by Lab Instructor.'),
-(128, 'ARCHIVE_CONCLUDED', NULL, 6, '2026-11-09 12:00:00', 'Annual institutional archive verified and checksummed for UIU showcase and lab archive audit.');
 
--- ==============================================================================
 -- PART 3: BUSINESS RULES IMPLEMENTATION VIA TRIGGERS
 -- ==============================================================================
 
@@ -895,49 +746,26 @@ BEGIN
     END IF;
 END //
 
--- TRIGGER 4 (AFTER INSERT on projects):
--- Automatically registers an entry into project_audit_log upon creation.
-CREATE TRIGGER `trg_audit_project_created`
-AFTER INSERT ON `projects`
+-- TRIGGER 4 (AFTER INSERT on awards):
+-- Automatically elevates the project status to 'Featured' when an award distinction is conferred.
+CREATE TRIGGER `trg_elevate_awarded_project_status`
+AFTER INSERT ON `awards`
 FOR EACH ROW
 BEGIN
-    INSERT INTO `project_audit_log` (`action_type`, `project_id`, `performed_by`, `details`)
-    VALUES (
-        'PROJECT_CREATED',
-        NEW.project_id,
-        NEW.created_by,
-        CONCAT('Project "', NEW.title, '" was registered under Course ID ', NEW.course_id, ', Trimester ID ', NEW.trimester_id, '.')
-    );
+    UPDATE `projects`
+    SET `status` = 'Featured'
+    WHERE `project_id` = NEW.project_id;
 END //
 
--- TRIGGER 5 (AFTER UPDATE on projects):
--- Logs project status or tech stack updates into project_audit_log.
-CREATE TRIGGER `trg_audit_project_updated`
-AFTER UPDATE ON `projects`
+-- TRIGGER 5 (AFTER DELETE on awards):
+-- Reverts the project status back to 'Approved' if an award distinction is removed.
+CREATE TRIGGER `trg_revert_unawarded_project_status`
+AFTER DELETE ON `awards`
 FOR EACH ROW
 BEGIN
-    INSERT INTO `project_audit_log` (`action_type`, `project_id`, `performed_by`, `details`)
-    VALUES (
-        'PROJECT_UPDATED',
-        NEW.project_id,
-        NEW.created_by,
-        CONCAT('Project "', NEW.title, '" status changed from "', OLD.status, '" to "', NEW.status, '". Tech stack: "', NEW.tech_stack, '".')
-    );
-END //
-
--- TRIGGER 6 (AFTER DELETE on projects):
--- Captures project removal in audit log before cascading drops.
-CREATE TRIGGER `trg_audit_project_deleted`
-AFTER DELETE ON `projects`
-FOR EACH ROW
-BEGIN
-    INSERT INTO `project_audit_log` (`action_type`, `project_id`, `performed_by`, `details`)
-    VALUES (
-        'PROJECT_DELETED',
-        OLD.project_id,
-        OLD.created_by,
-        CONCAT('Project "', OLD.title, '" (ID: ', OLD.project_id, ') was deleted from archive.')
-    );
+    UPDATE `projects`
+    SET `status` = 'Approved'
+    WHERE `project_id` = OLD.project_id;
 END //
 
 DELIMITER ;
@@ -1186,22 +1014,24 @@ INNER JOIN `showcase_events` se ON a.event_id = se.event_id
 ORDER BY a.prize_money DESC, p.submission_date ASC;
 
 /*
-QUERY 11 (Audit Log Chronological Trace with ORDER BY):
-Retrieve the last 15 security and operational audit actions logged in the system,
-ordered strictly from the most recent to oldest.
+QUERY 11 (Faculty Advisory Performance Roster with ORDER BY):
+Rank faculty advisors by total projects supervised and total prize money won
+by their student teams, ordered by project count descending and total prize descending.
 */
 SELECT
-    pal.log_id,
-    pal.action_type,
-    COALESCE(p.title, 'System Level Event') AS referenced_project,
-    COALESCE(u.full_name, 'System Daemon') AS performed_by_user,
-    pal.timestamp AS event_time,
-    pal.details
-FROM `project_audit_log` pal
-LEFT JOIN `projects` p ON pal.project_id = p.project_id
-LEFT JOIN `users` u ON pal.performed_by = u.user_id
-ORDER BY pal.timestamp DESC, pal.log_id DESC
-LIMIT 15;
+    u.full_name AS advisor_name,
+    u.email AS advisor_email,
+    d.dept_code,
+    COUNT(DISTINCT p.project_id) AS total_projects,
+    COUNT(DISTINCT a.award_id) AS total_awards,
+    COALESCE(SUM(a.prize_money), 0.00) AS total_prize_won
+FROM `users` u
+INNER JOIN `departments` d ON u.dept_id = d.dept_id
+LEFT JOIN `projects` p ON u.user_id = p.supervisor_id
+LEFT JOIN `awards` a ON p.project_id = a.project_id
+WHERE u.role = 'faculty'
+GROUP BY u.user_id, u.full_name, u.email, d.dept_code
+ORDER BY total_projects DESC, total_prize_won DESC;
 
 /*
 QUERY 12 (Alphabetical Roster with Course & Student ID Sorting):

@@ -87,19 +87,9 @@ interface Project {
   members: TeamMember[];
 }
 
-interface AuditLog {
-  log_id: number;
-  action_type: string;
-  timestamp: string;
-  details: string;
-  performed_by_name: string | null;
-}
-
 interface ProjectDetailResponse {
   success: boolean;
-  project: Project & {
-    audit_trail: AuditLog[];
-  };
+  project: Project;
   message?: string;
 }
 
@@ -761,18 +751,6 @@ class ShowcaseApp {
         </div>
       `).join('');
 
-      // Database Triggers Audit Trail
-      const auditHtml = p.audit_trail.map(a => `
-        <li class="relative pl-5 pb-3 last:pb-0 text-xs border-l border-slate-200 dark:border-slate-700">
-          <span class="absolute -left-1.5 top-0.5 w-2.5 h-2.5 rounded-full bg-orange-500"></span>
-          <div class="flex items-center justify-between text-[11px] text-slate-400 mb-0.5">
-            <span class="font-bold text-slate-700 dark:text-slate-300">${a.action_type}</span>
-            <span>${a.timestamp}</span>
-          </div>
-          <p class="text-slate-600 dark:text-slate-400">${this.escapeHtml(a.details)}</p>
-        </li>
-      `).join('');
-
       body.innerHTML = `
         <!-- Header -->
         <div class="p-5 sm:p-6 pr-14 sm:pr-16 border-b border-slate-100 dark:border-slate-800">
@@ -877,23 +855,6 @@ class ShowcaseApp {
               ${!p.github_url && !p.demo_url ? '<p class="text-xs text-slate-500">Institutional offline archive entry.</p>' : ''}
             </div>
           </div>
-
-          <!-- Institutional Audit Trail -->
-          ${p.audit_trail.length > 0 ? `
-            <div class="pt-3 border-t border-slate-100 dark:border-slate-800">
-              <details class="group">
-                <summary class="flex items-center justify-between cursor-pointer text-[11px] font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 select-none">
-                  <span>Database Audit Trail (${p.audit_trail.length} Records)</span>
-                  <span class="transition group-open:rotate-180">▼</span>
-                </summary>
-                <div class="mt-3 p-3 bg-slate-50 dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800">
-                  <ul class="space-y-2.5">
-                    ${auditHtml}
-                  </ul>
-                </div>
-              </details>
-            </div>
-          ` : ''}
         </div>
       `;
     } catch (err) {

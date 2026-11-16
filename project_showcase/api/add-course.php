@@ -86,15 +86,6 @@ try {
 
     $newCourseId = (int)$pdo->lastInsertId();
 
-    // Log the creation into audit trail
-    $auditStmt = $pdo->prepare("
-        INSERT INTO project_audit_log (action_type, performed_by, details)
-        VALUES ('COURSE_CREATED', 6, :details)
-    ");
-    $auditStmt->execute([
-        ':details' => "Administrative creation of course '$courseCode: $courseTitle' (Dept: {$dept['dept_code']})."
-    ]);
-
     // Return the newly created course object and fresh list of all courses
     $allCoursesStmt = $pdo->query("
         SELECT c.course_id, c.course_code, c.course_title, d.dept_code,

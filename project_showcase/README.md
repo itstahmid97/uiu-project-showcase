@@ -31,7 +31,7 @@ The **UIU Project Showcase & Archive System** is a production-ready, enterprise-
 1. **Showcase Past Term Innovations & Awards:** Archives winning projects with ribbons (1st Prize, 2nd Prize, 3rd Prize, Best FYDP, Best Innovation, Runner Up) and exact prize money conferred.
 2. **Idea Repository for Juniors:** Junior undergraduate students can explore previous implementations, study circuit schematics or software architectures, inspect live demo deployments, and review GitHub/GitLab repositories.
 3. **Multi-Faceted Search & Filtering:** Filter dynamically by **Course Code**, **Trimester**, **Award Distinction**, and **Technology Stack Tags** (e.g. `#ESP32`, `#LoRa`, `#PHP8`, `#PyTorch`, `#STM32`, `#ROS2`).
-4. **Institutional Audit Trail:** Every project submission, supervisor assignment, approval status change, and award conferral is permanently recorded in a normalized `project_audit_log` via database triggers.
+4. **Relational Data Integrity:** Enforces referential integrity, team size limits, and automatic status synchronization across all academic trimesters.
 
 ---
 
@@ -102,7 +102,7 @@ Copy the `project_showcase` folder into your XAMPP web root directory:
 2. Click on the **Import** tab in the top navigation bar.
 3. Click **Choose File** and select `project_showcase/database/schema.sql`.
 4. Click **Import** (or **Go**) at the bottom.
-5. The database `uiu_project_showcase` will be created with all 9 tables, 6 triggers, 3 views, composite indexes, 125+ member records, and 128 audit trail rows.
+5. The database `uiu_project_showcase` will be created with all 8 tables, 5 triggers, 3 views, composite indexes, and 125+ member records.
 
 *Alternative via Terminal/CMD:*
 ```bash
@@ -138,8 +138,6 @@ erDiagram
     PROJECTS ||--o{ PROJECT_MEMBERS : "consists of"
     PROJECTS ||--o{ AWARDS : "receives"
     SHOWCASE_EVENTS ||--o{ AWARDS : "confers"
-    PROJECTS ||--o{ PROJECT_AUDIT_LOG : "audits"
-    USERS ||--o{ PROJECT_AUDIT_LOG : "performed by"
 
     DEPARTMENTS {
         int dept_id PK
@@ -227,13 +225,12 @@ erDiagram
 | `project_members` | Associative table for team roles & rosters | PK: `member_id`, UNIQUE(`project_id`, `user_id`), CASCADE on delete |
 | `showcase_events` | Exhibition fairs per course & trimester | PK: `event_id`, FKs: `course_id`, `trimester_id` |
 | `awards` | Honors conferred (1st Prize, Best FYDP, etc.) | PK: `award_id`, UNIQUE(`project_id`, `event_id`), CHECK: `prize_money >= 0.00` |
-| `project_audit_log` | Institutional audit trail for compliance | PK: `log_id`, FK: `performed_by` |
 
 ---
 
 ## ⚙️ Business Rules Enforced by Triggers
 
-The database schema implements **6 active triggers** that guarantee strict data integrity at the database layer:
+The database schema implements **5 active triggers** that guarantee strict data integrity at the database layer:
 
 1. **`trg_check_empty_project_title` (BEFORE INSERT on `projects`):**
    Validates that no project can be created with an empty or whitespace title. Fires `SIGNAL SQLSTATE '45000'` if `CHAR_LENGTH(TRIM(NEW.title)) < 3`.
@@ -241,12 +238,10 @@ The database schema implements **6 active triggers** that guarantee strict data 
    Enforces UIU's laboratory policy: **A project team cannot exceed 4 students** (1 Leader + 3 Members). Rejects additional inserts with `SIGNAL SQLSTATE '45000'`.
 3. **`trg_prevent_past_award_modification` (BEFORE UPDATE on `awards`):**
    Prevents tampering with award results once a showcase event has been marked `is_locked = 1` or if 60 days have elapsed since the event date.
-4. **`trg_audit_project_created` (AFTER INSERT on `projects`):**
-   Automatically inserts an audit record into `project_audit_log` detailing the new project title, course ID, and trimester ID.
-5. **`trg_audit_project_updated` (AFTER UPDATE on `projects`):**
-   Logs any status transitions (e.g., from `Submitted` to `Approved` or `Featured`) and tech stack modifications into `project_audit_log`.
-6. **`trg_audit_project_deleted` (AFTER DELETE on `projects`):**
-   Captures project deletions before cascading foreign keys execute.
+4. **`trg_elevate_awarded_project_status` (AFTER INSERT on `awards`):**
+   Automatically elevates the project status to `'Featured'` in `projects` table whenever an award distinction is conferred.
+5. **`trg_revert_unawarded_project_status` (AFTER DELETE on `awards`):**
+   Reverts the project status back to `'Approved'` if an award distinction is revoked.
 
 ---
 
@@ -366,9 +361,8 @@ GRANT SELECT ON `uiu_project_showcase`.`vw_course_project_summary` TO 'student_v
 GRANT SELECT ON `uiu_project_showcase`.`courses` TO 'student_viewer'@'localhost';
 GRANT SELECT ON `uiu_project_showcase`.`trimesters` TO 'student_viewer'@'localhost';
 
--- Revoke direct access to private credentials & audit log
+-- Revoke direct access to private credentials
 REVOKE ALL PRIVILEGES ON `uiu_project_showcase`.`users` FROM 'student_viewer'@'localhost';
-REVOKE ALL PRIVILEGES ON `uiu_project_showcase`.`project_audit_log` FROM 'student_viewer'@'localhost';
 FLUSH PRIVILEGES;
 ```
 
@@ -399,7 +393,7 @@ Here are the exact answers to the questions professors and external examiners ty
 > **Answer:** Rather than relying solely on client-side JavaScript, we enforce this at the database level using a **`BEFORE INSERT` trigger** (`trg_enforce_team_size_limit`). When a student is added to `project_members`, the trigger queries the current count. If `count >= 4`, it throws `SIGNAL SQLSTATE '45000'`, aborting the transaction before invalid data can ever be committed.
 
 #### Q3: "What happens to project members and awards if a project is deleted?"
-> **Answer:** We defined Foreign Key constraints on `project_members` and `awards` with **`ON DELETE CASCADE`**. When a project is removed, all associated member associations and award records are cleaned up automatically by the database engine, avoiding orphaned rows. In addition, an **`AFTER DELETE` trigger** logs the deletion event in `project_audit_log`.
+> **Answer:** We defined Foreign Key constraints on `project_members` and `awards` with **`ON DELETE CASCADE`**. When a project is removed, all associated member associations and award records are cleaned up automatically by the database engine, avoiding orphaned rows. In addition, an **`AFTER DELETE` trigger** on awards automatically reverts the project's status back to `'Approved'`.
 
 #### Q4: "Why use a Composite Index on `(course_id, trimester_id)` instead of two single indexes?"
 > **Answer:** In UIU's project portal, the most frequent query filters projects by both Course and Trimester simultaneously. A composite index creates a single multi-column B-Tree structure. MySQL can perform an exact `ref` search on both columns in $O(\log N)$ time with a key length of 8 bytes, avoiding the overhead of merging two independent index trees (Index Merge).

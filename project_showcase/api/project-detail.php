@@ -103,28 +103,10 @@ try {
     $membersStmt->execute([':project_id' => $projectId]);
     $members = $membersStmt->fetchAll();
 
-    // 3. Fetch Project Audit Log History
-    $auditStmt = $pdo->prepare("
-        SELECT 
-            pal.log_id,
-            pal.action_type,
-            pal.timestamp,
-            pal.details,
-            u.full_name AS performed_by_name,
-            u.role AS performed_by_role
-        FROM project_audit_log pal
-        LEFT JOIN users u ON pal.performed_by = u.user_id
-        WHERE pal.project_id = :project_id
-        ORDER BY pal.timestamp DESC, pal.log_id DESC
-        LIMIT 10
-    ");
-    $auditStmt->execute([':project_id' => $projectId]);
-    $auditLogs = $auditStmt->fetchAll();
-
-    // 4. Tech stack array
+    // 3. Tech stack array
     $techTags = array_map('trim', explode(',', $project['tech_stack']));
 
-    // 5. Structure payload
+    // 4. Structure payload
     $response = [
         'success' => true,
         'project' => [
@@ -176,8 +158,7 @@ try {
                     'dept'         => $m['dept_code'],
                     'contribution' => $m['contribution_details']
                 ];
-            }, $members),
-            'audit_trail' => $auditLogs
+            }, $members)
         ]
     ];
 

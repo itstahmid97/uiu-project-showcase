@@ -87,10 +87,10 @@ $catalog = [
     ],
     11 => [
         'id' => 11,
-        'category' => 'Sorting & Ordering (Audit Trail)',
-        'title' => 'Latest 15 System Security & Audit Events',
-        'description' => 'Chronological trace of project lifecycle events ordered by timestamp DESC.',
-        'sql' => "SELECT pal.log_id, pal.action_type, COALESCE(p.title, 'System Level Event') AS referenced_project, COALESCE(u.full_name, 'System Daemon') AS performed_by_user, pal.timestamp AS event_time, pal.details FROM project_audit_log pal LEFT JOIN projects p ON pal.project_id = p.project_id LEFT JOIN users u ON pal.performed_by = u.user_id ORDER BY pal.timestamp DESC, pal.log_id DESC LIMIT 15;"
+        'category' => 'Sorting & Ordering (Faculty Advisory)',
+        'title' => 'Faculty Advisory Ranking by Supervised Projects & Awards',
+        'description' => 'Ranks faculty advisors by total projects supervised and total prize money won, ordered by project count DESC.',
+        'sql' => "SELECT u.full_name AS advisor_name, u.email AS advisor_email, d.dept_code, COUNT(DISTINCT p.project_id) AS total_projects, COUNT(DISTINCT a.award_id) AS total_awards, COALESCE(SUM(a.prize_money), 0.00) AS total_prize_won FROM users u INNER JOIN departments d ON u.dept_id = d.dept_id LEFT JOIN projects p ON u.user_id = p.supervisor_id LEFT JOIN awards a ON p.project_id = a.project_id WHERE u.role = 'faculty' GROUP BY u.user_id, u.full_name, u.email, d.dept_code ORDER BY total_projects DESC, total_prize_won DESC;"
     ],
     12 => [
         'id' => 12,

@@ -69,7 +69,7 @@ A 3NF normalized, relational database system providing:
 - Fast multi-criteria search and filtering by Course, Trimester, Award, and Technology Tags.
 - Automatic enforcement of UIU academic policies via database triggers (e.g., maximum team size $\le 4$, non-empty titles, immutable award seals).
 - Robust relational architecture maintaining referential integrity across 9 tables.
-- Comprehensive institutional audit trail tracking every submission and status transition.
+- Comprehensive institutional project repository tracking every submission, member, and award distinction.
 - Single-click deployment on XAMPP Localhost via MySQL 8.0+ and phpMyAdmin.
 
 ---
@@ -103,7 +103,7 @@ A 3NF normalized, relational database system providing:
 ### 5.1 Functional Requirements
 - **FR1:** The system shall allow users to filter projects by course, trimester, and award.
 - **FR2:** The system shall enforce a maximum team size limit of 4 students per project via database triggers.
-- **FR3:** The system shall automatically record all insertions, updates, and deletions in `project_audit_log`.
+- **FR3:** The system shall automatically synchronize project showcase status to 'Featured' upon award conferral via database triggers.
 - **FR4:** The system shall hide sensitive credentials (passwords, private emails) via database views.
 
 ### 5.2 Non-Functional Requirements
@@ -142,7 +142,7 @@ Web-based single-page application communicating via RESTful JSON APIs to a norma
 ---
 
 ## 7. Database Design
-The database consists of **9 relational tables**, fully adhering to Third Normal Form (3NF):
+The database consists of **8 relational tables**, fully adhering to Third Normal Form (3NF):
 1. `departments`: University academic faculties.
 2. `courses`: Dynamic course offerings (SAD, Web, Micro, Electronics, AI, FYDP 1 & 2).
 3. `trimesters`: Academic terms (Spring 2025 to Fall 2026).
@@ -151,7 +151,6 @@ The database consists of **9 relational tables**, fully adhering to Third Normal
 6. `project_members`: Associative table linking students to projects with team roles.
 7. `showcase_events`: Exhibition events organized by trimester and course.
 8. `awards`: Conferred distinctions, prize money, and judging remarks.
-9. `project_audit_log`: System ledger tracking operational actions via triggers.
 
 ---
 
@@ -171,8 +170,6 @@ erDiagram
     PROJECTS ||--o{ PROJECT_MEMBERS : composed_of
     PROJECTS ||--o{ AWARDS : receives
     SHOWCASE_EVENTS ||--o{ AWARDS : grants
-    USERS ||--o{ PROJECT_AUDIT_LOG : performs
-    PROJECTS ||--o{ PROJECT_AUDIT_LOG : affects
 ```
 
 ---
@@ -188,7 +185,6 @@ erDiagram
 - `project_members` (`member_id` [PK], `project_id` [FK], `user_id` [FK], `role_in_team`, `UNIQUE (project_id, user_id)`)
 - `showcase_events` (`event_id` [PK], `event_title`, `course_id` [FK], `trimester_id` [FK], `event_date`, `venue`, `is_locked`)
 - `awards` (`award_id` [PK], `project_id` [FK], `event_id` [FK], `award_title`, `prize_money`, `remarks`, `CHECK (prize_money >= 0)`, `UNIQUE (project_id, event_id)`)
-- `project_audit_log` (`log_id` [PK], `action_type`, `project_id`, `performed_by` [FK], `timestamp`, `details`)
 
 ---
 
@@ -224,7 +220,7 @@ Transitive functional dependencies ($X \rightarrow Y \rightarrow Z$) are elimina
 
 ### 11.4 Meaningful ORDER BY
 - **Query 10:** Ranks projects by prize money descending, breaking ties by earliest submission date.
-- **Query 11:** Retrieves chronological security trace from `project_audit_log`.
+- **Query 11:** Ranks faculty advisors by total projects supervised and total prize money won by their student teams.
 - **Query 12:** Sorts university participant directory by Course, Leadership role, and Student ID.
 
 ---
