@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>UIU Project Showcase — Academic & Research Archive | CSE 3522</title>
+  <title>UIU Project Showcase — Student Engineering & Capstone Portal | CSE 3522</title>
 
   <!-- Tailwind CSS 3.4 CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -22,7 +22,8 @@
             }
           },
           fontFamily: {
-            sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
+            sans: ['Outfit', '"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
+            heading: ['Outfit', 'sans-serif'],
             mono: ['"JetBrains Mono"', 'monospace']
           }
         }
@@ -57,8 +58,8 @@
           </svg>
         </div>
         <div class="min-w-0">
-          <span class="text-sm sm:text-base font-bold tracking-tight text-slate-900 dark:text-white">UIU Project <span class="text-orange-600 dark:text-orange-500">Showcase</span></span>
-          <p class="text-[10px] sm:text-[11px] text-slate-500 dark:text-slate-400 font-medium hidden sm:block">Academic & Research Archive</p>
+          <span class="text-sm sm:text-base font-extrabold tracking-tight text-slate-900 dark:text-white">UIU Project <span class="text-orange-600 dark:text-orange-500">Showcase</span></span>
+          <p class="text-[10px] sm:text-[11px] text-slate-500 dark:text-slate-400 font-medium hidden sm:block">Department of CSE • UIU</p>
         </div>
       </a>
 
@@ -77,7 +78,7 @@
           <svg class="w-3.5 h-3.5 sm:mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
           </svg>
-          <span class="hidden sm:inline">Submit </span><span>Project</span>
+          <span class="hidden sm:inline mr-1">Submit</span><span>Project</span>
         </button>
 
         <!-- Add Course Button (Extensibility Demo) -->
@@ -99,7 +100,7 @@
   <!-- ========================================== -->
   <!-- Hero Section                               -->
   <!-- ========================================== -->
-  <section class="hero-section relative bg-white/70 dark:bg-transparent backdrop-blur-[2px] border-b border-slate-200 dark:border-slate-800/80 overflow-hidden py-10 md:py-16">
+  <section class="hero-section relative bg-white/35 dark:bg-transparent backdrop-blur-[1px] border-b border-slate-200/80 dark:border-slate-800/80 overflow-hidden py-10 md:py-16">
     <!-- Background Pattern & Subtle Glow -->
     <div class="absolute inset-0 bg-grid-pattern opacity-60 dark:opacity-30 pointer-events-none"></div>
     <div class="hero-glow"></div>
@@ -107,19 +108,19 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full min-w-0">
       <div class="max-w-3xl w-full">
         <!-- University Badge -->
-        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-orange-50 text-orange-700 dark:bg-orange-950/60 dark:text-orange-300 border border-orange-200 dark:border-orange-800/60 mb-4 max-w-full">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-orange-100/90 text-orange-800 dark:bg-orange-950/60 dark:text-orange-300 border border-orange-300/80 dark:border-orange-800/60 mb-4 max-w-full">
           <span class="w-2 h-2 rounded-full bg-orange-500 animate-pulse flex-shrink-0"></span>
-          <span class="truncate">UIU • Academic & Research Archive</span>
+          <span class="truncate font-semibold">CSE 3522 • DBMS Final Project Showcase</span>
         </div>
 
         <!-- Headline -->
-        <h1 class="text-2xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-tight">
-          UIU Project Showcase & <span class="text-orange-600 dark:text-orange-500">Research Archive</span>
+        <h1 class="text-2xl sm:text-4xl lg:text-5xl font-extrabold text-slate-950 dark:text-white tracking-tight leading-tight">
+          Explore Student Projects, <span class="text-orange-600 dark:text-orange-500">Capstones & Innovations</span>
         </h1>
 
         <!-- Extensible Subtitle (No hardcoded course lists) -->
-        <p class="mt-3 text-xs sm:text-base text-slate-600 dark:text-slate-400 leading-relaxed max-w-2xl">
-          A centralized university repository to search, explore, and evaluate student capstone and laboratory projects across all academic departments and trimesters.
+        <p class="mt-3 text-xs sm:text-base text-slate-700 dark:text-slate-300 font-normal leading-relaxed max-w-2xl">
+          A centralized university platform to browse, evaluate, and showcase outstanding undergraduate laboratory works and capstone design projects across all academic trimesters.
         </p>
 
         <!-- Search Bar -->
@@ -139,31 +140,31 @@
       <!-- Quick Metrics Strip -->
       <div class="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 mt-10 pt-8 border-t border-slate-100 dark:border-slate-800/80">
         <!-- Metric 1 -->
-        <div class="stat-card p-4 rounded-xl bg-slate-50/80 dark:bg-slate-900/60 border border-slate-200/80 dark:border-slate-800 backdrop-blur-sm">
-          <p class="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Archived Projects</p>
-          <h3 id="stat-total-projects" class="text-2xl font-black text-slate-900 dark:text-white mt-1">--</h3>
-          <p class="text-[11px] text-slate-400 mt-0.5">Across All Trimesters</p>
+        <div class="stat-card p-4 rounded-xl bg-white/90 dark:bg-slate-900/60 border border-slate-200/90 dark:border-slate-800 shadow-sm backdrop-blur-sm">
+          <p class="text-[11px] font-bold text-slate-600 dark:text-slate-400 uppercase tracking-wider">Archived Projects</p>
+          <h3 id="stat-total-projects" class="text-2xl font-black text-slate-950 dark:text-white mt-1">--</h3>
+          <p class="text-[11px] text-slate-500 dark:text-slate-400 font-medium mt-0.5">Across All Trimesters</p>
         </div>
 
         <!-- Metric 2 -->
-        <div class="stat-card p-4 rounded-xl bg-slate-50/80 dark:bg-slate-900/60 border border-slate-200/80 dark:border-slate-800 backdrop-blur-sm">
-          <p class="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Capstone Vault</p>
+        <div class="stat-card p-4 rounded-xl bg-white/90 dark:bg-slate-900/60 border border-slate-200/90 dark:border-slate-800 shadow-sm backdrop-blur-sm">
+          <p class="text-[11px] font-bold text-slate-600 dark:text-slate-400 uppercase tracking-wider">Capstone Vault</p>
           <h3 id="stat-total-fydp" class="text-2xl font-black text-blue-600 dark:text-blue-400 mt-1">--</h3>
-          <p class="text-[11px] text-slate-400 mt-0.5">Final Year Projects</p>
+          <p class="text-[11px] text-slate-500 dark:text-slate-400 font-medium mt-0.5">Final Year Projects</p>
         </div>
 
         <!-- Metric 3 -->
-        <div class="stat-card p-4 rounded-xl bg-slate-50/80 dark:bg-slate-900/60 border border-slate-200/80 dark:border-slate-800 backdrop-blur-sm">
-          <p class="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Award Winners</p>
+        <div class="stat-card p-4 rounded-xl bg-white/90 dark:bg-slate-900/60 border border-slate-200/90 dark:border-slate-800 shadow-sm backdrop-blur-sm">
+          <p class="text-[11px] font-bold text-slate-600 dark:text-slate-400 uppercase tracking-wider">Award Winners</p>
           <h3 id="stat-total-winners" class="text-2xl font-black text-amber-500 dark:text-amber-400 mt-1">--</h3>
-          <p class="text-[11px] text-slate-400 mt-0.5">Showcase Honors</p>
+          <p class="text-[11px] text-slate-500 dark:text-slate-400 font-medium mt-0.5">Showcase Honors</p>
         </div>
 
         <!-- Metric 4 -->
-        <div class="stat-card p-4 rounded-xl bg-slate-50/80 dark:bg-slate-900/60 border border-slate-200/80 dark:border-slate-800 backdrop-blur-sm">
-          <p class="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Prize Grants</p>
+        <div class="stat-card p-4 rounded-xl bg-white/90 dark:bg-slate-900/60 border border-slate-200/90 dark:border-slate-800 shadow-sm backdrop-blur-sm">
+          <p class="text-[11px] font-bold text-slate-600 dark:text-slate-400 uppercase tracking-wider">Prize Grants</p>
           <h3 id="stat-total-prize" class="text-2xl font-black text-emerald-600 dark:text-emerald-400 mt-1">--</h3>
-          <p class="text-[11px] text-slate-400 mt-0.5">Award Funding (BDT)</p>
+          <p class="text-[11px] text-slate-500 dark:text-slate-400 font-medium mt-0.5">Award Funding (BDT)</p>
         </div>
       </div>
     </div>
@@ -189,24 +190,24 @@
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
         <!-- Course Filter -->
         <div>
-          <label for="course-filter" class="block text-[11px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-1">Course</label>
-          <select id="course-filter" class="w-full text-xs py-2.5 px-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-orange-500 focus:outline-none dark:text-white">
+          <label for="course-filter" class="block text-[11px] font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400 mb-1">Course</label>
+          <select id="course-filter" class="w-full text-xs py-2.5 px-3 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-orange-500 focus:outline-none text-slate-800 dark:text-white font-medium shadow-sm">
             <option value="">All Courses</option>
           </select>
         </div>
 
         <!-- Trimester Filter -->
         <div>
-          <label for="trimester-filter" class="block text-[11px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-1">Trimester</label>
-          <select id="trimester-filter" class="w-full text-xs py-2.5 px-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-orange-500 focus:outline-none dark:text-white">
+          <label for="trimester-filter" class="block text-[11px] font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400 mb-1">Trimester</label>
+          <select id="trimester-filter" class="w-full text-xs py-2.5 px-3 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-orange-500 focus:outline-none text-slate-800 dark:text-white font-medium shadow-sm">
             <option value="">All Trimesters</option>
           </select>
         </div>
 
         <!-- Award Filter -->
         <div>
-          <label for="award-filter" class="block text-[11px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-1">Award Status</label>
-          <select id="award-filter" class="w-full text-xs py-2.5 px-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-orange-500 focus:outline-none dark:text-white">
+          <label for="award-filter" class="block text-[11px] font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400 mb-1">Award Status</label>
+          <select id="award-filter" class="w-full text-xs py-2.5 px-3 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-orange-500 focus:outline-none text-slate-800 dark:text-white font-medium shadow-sm">
             <option value="all">All Projects</option>
             <option value="winners_only">Award Winners Only</option>
             <option value="1st_prize">1st Prize</option>
@@ -219,8 +220,8 @@
 
         <!-- Sort Filter -->
         <div>
-          <label for="sort-filter" class="block text-[11px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-1">Sort By</label>
-          <select id="sort-filter" class="w-full text-xs py-2.5 px-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-orange-500 focus:outline-none dark:text-white">
+          <label for="sort-filter" class="block text-[11px] font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400 mb-1">Sort By</label>
+          <select id="sort-filter" class="w-full text-xs py-2.5 px-3 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-orange-500 focus:outline-none text-slate-800 dark:text-white font-medium shadow-sm">
             <option value="newest">Honors & Newest First</option>
             <option value="prize_desc">Highest Prize Money</option>
             <option value="title_asc">Project Title (A-Z)</option>
@@ -241,7 +242,7 @@
 
       <!-- Popular Tech Tags -->
       <div class="pt-3 border-t border-slate-100 dark:border-slate-800 flex flex-wrap items-center gap-1.5">
-        <span class="text-[11px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 mr-1">Popular Stack:</span>
+        <span class="text-[11px] font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400 mr-1">Popular Stack:</span>
         <div id="popular-techs-container" class="flex flex-wrap items-center gap-1.5">
           <!-- Injected dynamically -->
         </div>
@@ -531,7 +532,7 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
       <div>
         <p class="font-bold text-slate-900 dark:text-slate-100">UIU Project Showcase</p>
-        <p class="text-[11px] text-slate-500 dark:text-slate-400">Academic & Research Archive • Department of Computer Science & Engineering, UIU</p>
+        <p class="text-[11px] text-slate-600 dark:text-slate-400 font-medium">Student Engineering & Capstone Repository • Department of Computer Science & Engineering, UIU</p>
       </div>
       <div class="text-[11px] text-slate-400 sm:text-right">
         <p class="font-mono text-orange-600 dark:text-orange-400">CSE 3522: Database Management Systems Laboratory</p>

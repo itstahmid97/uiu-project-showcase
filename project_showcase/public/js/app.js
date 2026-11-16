@@ -1,6 +1,6 @@
 "use strict";
 /**
- * UIU Project Showcase & Research Archive
+ * UIU Project Showcase
  * Student Project for CSE 3522: Database Management Systems Laboratory
  * Department of Computer Science & Engineering, United International University
  *
@@ -103,10 +103,10 @@ class ShowcaseApp {
                     const dx = particles[i].x - particles[j].x;
                     const dy = particles[i].y - particles[j].y;
                     const dist = Math.sqrt(dx * dx + dy * dy);
-                    if (dist < 115) {
-                        const lineAlpha = (1 - dist / 115) * 0.16;
+                    if (dist < 120) {
+                        const lineAlpha = (1 - dist / 120) * (isDark ? 0.18 : 0.28);
                         ctx.strokeStyle = `rgba(${nodeColor}, ${lineAlpha})`;
-                        ctx.lineWidth = 1;
+                        ctx.lineWidth = isDark ? 1 : 1.2;
                         ctx.beginPath();
                         ctx.moveTo(particles[i].x, particles[i].y);
                         ctx.lineTo(particles[j].x, particles[j].y);
@@ -130,7 +130,8 @@ class ShowcaseApp {
                     p.vx *= -1;
                 if (p.y < 0 || p.y > height)
                     p.vy *= -1;
-                ctx.fillStyle = `rgba(${nodeColor}, ${p.alpha})`;
+                const nodeAlpha = isDark ? p.alpha : Math.min(1, p.alpha * 1.4 + 0.25);
+                ctx.fillStyle = `rgba(${nodeColor}, ${nodeAlpha})`;
                 ctx.beginPath();
                 ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
                 ctx.fill();
@@ -415,7 +416,7 @@ class ShowcaseApp {
               <span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-bold bg-orange-50 text-orange-700 dark:bg-orange-950/60 dark:text-orange-300 border border-orange-200/80 dark:border-orange-800/80">
                 ${p.course.course_code}
               </span>
-              <span class="text-[11px] font-medium text-slate-400 dark:text-slate-500">
+              <span class="text-[11px] font-medium text-slate-500 dark:text-slate-400">
                 ${p.trimester.term_name} ${p.trimester.year}
               </span>
             </div>
@@ -424,29 +425,29 @@ class ShowcaseApp {
             ${awardBadge ? `<div class="mb-3">${awardBadge}</div>` : ''}
 
             <!-- Project Title (Full academic title, NEVER truncated) -->
-            <h3 class="text-sm sm:text-base font-bold text-slate-900 dark:text-white leading-snug break-words hover:text-orange-600 dark:hover:text-orange-400 transition cursor-pointer" onclick="app.viewProjectDetail(${p.project_id})">
+            <h3 class="text-sm sm:text-base font-bold text-slate-950 dark:text-white leading-snug break-words hover:text-orange-600 dark:hover:text-orange-400 transition cursor-pointer" onclick="app.viewProjectDetail(${p.project_id})">
               ${this.escapeHtml(p.title)}
             </h3>
 
             <!-- Abstract Excerpt -->
-            <p class="text-xs text-slate-600 dark:text-slate-400 mt-2 line-clamp-3 leading-relaxed break-words">
+            <p class="text-xs text-slate-700 dark:text-slate-300 mt-2 line-clamp-3 leading-relaxed break-words">
               ${this.escapeHtml(p.abstract)}
             </p>
 
             <!-- Faculty Advisor Label -->
             ${p.supervisor ? `
-              <div class="mt-2.5 flex items-center gap-1.5 text-[11px] text-slate-500 dark:text-slate-400">
+              <div class="mt-2.5 flex items-center gap-1.5 text-[11px] text-slate-600 dark:text-slate-400">
                 <svg class="w-3.5 h-3.5 text-orange-600 dark:text-orange-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
                 </svg>
-                <span class="truncate">Advisor: <span class="font-medium text-slate-700 dark:text-slate-200">${this.escapeHtml(p.supervisor.name)}</span></span>
+                <span class="truncate">Advisor: <span class="font-semibold text-slate-900 dark:text-slate-100">${this.escapeHtml(p.supervisor.name)}</span></span>
               </div>
             ` : ''}
 
             <!-- Tech Tags -->
             <div class="flex flex-wrap gap-1.5 mt-3">
               ${techTagsHtml}
-              ${p.tech_tags.length > 4 ? `<span class="px-1.5 py-0.5 text-[10px] text-slate-400">+${p.tech_tags.length - 4} more</span>` : ''}
+              ${p.tech_tags.length > 4 ? `<span class="px-1.5 py-0.5 text-[10px] text-slate-500 dark:text-slate-400 font-medium">+${p.tech_tags.length - 4} more</span>` : ''}
             </div>
           </div>
 
@@ -457,10 +458,10 @@ class ShowcaseApp {
                 ${p.leader.name.charAt(0)}
               </div>
               <div class="min-w-0 flex-1">
-                <p class="text-xs font-semibold text-slate-800 dark:text-slate-200 truncate" title="${this.escapeHtml(p.leader.name)}">
+                <p class="text-xs font-bold text-slate-900 dark:text-slate-100 truncate" title="${this.escapeHtml(p.leader.name)}">
                   ${this.escapeHtml(p.leader.name)}
                 </p>
-                <p class="text-[10px] text-slate-400">
+                <p class="text-[10px] text-slate-500 dark:text-slate-400 font-medium">
                   ${p.members.length} team members
                 </p>
               </div>
@@ -594,15 +595,15 @@ class ShowcaseApp {
         <div class="p-5 sm:p-6 space-y-5 max-h-[72vh] overflow-y-auto">
           <!-- Abstract -->
           <div>
-            <h4 class="text-[11px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-2">Project Abstract</h4>
-            <p class="text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed bg-slate-50 dark:bg-slate-800/40 p-3.5 sm:p-4 rounded-xl border border-slate-100 dark:border-slate-800 break-words">
+            <h4 class="text-[11px] font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400 mb-2">Project Abstract</h4>
+            <p class="text-xs sm:text-sm text-slate-800 dark:text-slate-200 leading-relaxed bg-slate-50 dark:bg-slate-800/40 p-3.5 sm:p-4 rounded-xl border border-slate-200 dark:border-slate-800 break-words">
               ${this.escapeHtml(p.abstract)}
             </p>
           </div>
 
           <!-- Technologies -->
           <div>
-            <h4 class="text-[11px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-2">Technologies & Architecture</h4>
+            <h4 class="text-[11px] font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400 mb-2">Technologies & Architecture</h4>
             <div class="flex flex-wrap gap-2">
               ${p.tech_tags.map(t => `<span class="px-2.5 py-1 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs font-medium rounded-lg border border-slate-200 dark:border-slate-700">${t}</span>`).join('')}
             </div>
@@ -610,7 +611,7 @@ class ShowcaseApp {
 
           <!-- Faculty Project Advisor -->
           <div>
-            <h4 class="text-[11px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-2">Faculty Project Advisor</h4>
+            <h4 class="text-[11px] font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400 mb-2">Faculty Project Advisor</h4>
             <div class="faculty-advisor-box p-3.5 bg-gradient-to-r from-orange-50/80 to-amber-50/50 dark:from-orange-950/20 dark:to-amber-950/10 rounded-xl border border-orange-200/80 dark:border-orange-800/40 flex items-center justify-between gap-3">
               <div class="flex items-center space-x-3 min-w-0">
                 <div class="w-10 h-10 rounded-full bg-orange-600 text-white font-bold flex items-center justify-center text-sm shadow-sm flex-shrink-0">
@@ -620,7 +621,7 @@ class ShowcaseApp {
                   <h5 class="font-bold text-slate-900 dark:text-white text-xs sm:text-sm truncate">
                     ${this.escapeHtml(p.supervisor ? p.supervisor.name : 'Faculty Advisory Committee')}
                   </h5>
-                  <p class="text-[11px] text-slate-500 dark:text-slate-400">Department of Computer Science & Engineering • UIU</p>
+                  <p class="text-[11px] text-slate-600 dark:text-slate-400">Department of Computer Science & Engineering • UIU</p>
                 </div>
               </div>
               ${p.supervisor?.email ? `
@@ -634,7 +635,7 @@ class ShowcaseApp {
 
           <!-- Student Engineering Team -->
           <div>
-            <h4 class="text-[11px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-2">Student Engineering Team (${p.members.length} Members)</h4>
+            <h4 class="text-[11px] font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400 mb-2">Student Engineering Team (${p.members.length} Members)</h4>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
               ${membersHtml}
             </div>
@@ -642,7 +643,7 @@ class ShowcaseApp {
 
           <!-- Repositories & External Links -->
           <div>
-            <h4 class="text-[11px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-2">Repositories & Artifacts</h4>
+            <h4 class="text-[11px] font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400 mb-2">Repositories & Artifacts</h4>
             <div class="flex flex-wrap gap-2.5">
               ${p.github_url ? `
                 <a href="${p.github_url}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center px-3.5 py-2 rounded-lg text-xs font-semibold bg-slate-900 text-white dark:bg-slate-800 dark:hover:bg-slate-700 hover:bg-slate-800 transition">
@@ -658,7 +659,7 @@ class ShowcaseApp {
                 </a>
               ` : ''}
 
-              ${!p.github_url && !p.demo_url ? '<p class="text-xs text-slate-400">Institutional offline archive entry.</p>' : ''}
+              ${!p.github_url && !p.demo_url ? '<p class="text-xs text-slate-500">Institutional offline archive entry.</p>' : ''}
             </div>
           </div>
 
@@ -666,7 +667,7 @@ class ShowcaseApp {
           ${p.audit_trail.length > 0 ? `
             <div class="pt-3 border-t border-slate-100 dark:border-slate-800">
               <details class="group">
-                <summary class="flex items-center justify-between cursor-pointer text-[11px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 hover:text-slate-600 select-none">
+                <summary class="flex items-center justify-between cursor-pointer text-[11px] font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 select-none">
                   <span>Database Audit Trail (${p.audit_trail.length} Records)</span>
                   <span class="transition group-open:rotate-180">▼</span>
                 </summary>
