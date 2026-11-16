@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>UIU Project Showcase — Student Engineering & Capstone Portal | CSE 3522</title>
+  <title>UIU Project Showcase — Student Engineering & Capstone Portal</title>
 
   <!-- Tailwind CSS 3.4 CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -65,14 +65,6 @@
 
       <!-- Navigation Actions -->
       <div class="flex items-center space-x-1.5 sm:space-x-2.5 flex-shrink-0">
-        <!-- SQL Lab Console (Viva Defense) -->
-        <button id="open-viva-btn" class="inline-flex items-center px-2.5 py-1.5 sm:px-3 rounded-lg text-xs font-semibold bg-blue-50 text-blue-700 dark:bg-blue-950/60 dark:text-blue-300 hover:bg-blue-100 dark:hover:bg-blue-900 transition border border-blue-200 dark:border-blue-800 shadow-sm" title="Open SQL Viva Console">
-          <svg class="w-3.5 h-3.5 sm:mr-1.5 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-          </svg>
-          <span class="hidden md:inline">SQL Lab & </span><span>Viva</span>
-        </button>
-
         <!-- Submit Project Button -->
         <button id="open-add-project-btn" class="btn-primary-animated inline-flex items-center px-2.5 py-1.5 sm:px-3.5 rounded-lg text-xs font-semibold bg-orange-600 text-white hover:bg-orange-700 transition shadow-sm" title="Submit Project">
           <svg class="w-3.5 h-3.5 sm:mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -110,7 +102,7 @@
         <!-- University Badge -->
         <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-orange-100/90 text-orange-800 dark:bg-orange-950/60 dark:text-orange-300 border border-orange-300/80 dark:border-orange-800/60 mb-4 max-w-full">
           <span class="w-2 h-2 rounded-full bg-orange-500 animate-pulse flex-shrink-0"></span>
-          <span class="truncate font-semibold">CSE 3522 • DBMS Final Project Showcase</span>
+          <span class="truncate font-semibold">United International University • Project Showcase</span>
         </div>
 
         <!-- Headline -->
@@ -302,7 +294,7 @@
               </svg>
             </div>
             <div>
-              <h3 class="text-sm sm:text-base font-bold text-slate-900 dark:text-white">CSE 3522: SQL Lab & Viva Console</h3>
+              <h3 class="text-sm sm:text-base font-bold text-slate-900 dark:text-white">Database Analytics & SQL Console</h3>
               <p class="text-xs text-slate-500">Live Execution of 12 Analytical Joins, Subqueries & Aggregations</p>
             </div>
           </div>
@@ -534,8 +526,10 @@
         <p class="font-bold text-slate-900 dark:text-slate-100">UIU Project Showcase</p>
         <p class="text-[11px] text-slate-600 dark:text-slate-400 font-medium">Student Engineering & Capstone Repository • Department of Computer Science & Engineering, UIU</p>
       </div>
-      <div class="text-[11px] text-slate-400 sm:text-right">
-        <p class="font-mono text-orange-600 dark:text-orange-400">CSE 3522: Database Management Systems Laboratory</p>
+      <div class="text-[11px] text-slate-500 dark:text-slate-400 sm:text-right flex items-center gap-2 justify-center sm:justify-end">
+        <span>United International University • Dhaka, Bangladesh</span>
+        <span class="text-slate-300 dark:text-slate-700">•</span>
+        <button id="open-viva-footer-btn" class="hover:text-orange-600 dark:hover:text-orange-400 transition underline decoration-dotted font-medium">SQL Console</button>
       </div>
     </div>
   </footer>

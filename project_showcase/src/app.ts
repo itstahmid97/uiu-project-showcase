@@ -360,6 +360,7 @@ class ShowcaseApp {
     document.getElementById('close-add-course-btn')?.addEventListener('click', () => this.closeAddCourse());
 
     document.getElementById('open-viva-btn')?.addEventListener('click', () => this.openVivaModal());
+    document.getElementById('open-viva-footer-btn')?.addEventListener('click', () => this.openVivaModal());
     document.getElementById('close-viva-modal-btn')?.addEventListener('click', () => this.closeVivaModal());
     document.getElementById('viva-modal-backdrop')?.addEventListener('click', () => this.closeVivaModal());
 
@@ -759,18 +760,18 @@ class ShowcaseApp {
 
       body.innerHTML = `
         <!-- Header -->
-        <div class="p-5 sm:p-6 border-b border-slate-100 dark:border-slate-800">
-          <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
-            <div class="flex items-center gap-2">
-              <span class="px-2.5 py-1 rounded text-xs font-bold bg-orange-50 text-orange-700 dark:bg-orange-950 dark:text-orange-300 border border-orange-200 dark:border-orange-800">${p.course.course_code}</span>
-              <span class="text-xs text-slate-500 font-medium">${p.course.course_title}</span>
+        <div class="p-5 sm:p-6 pr-14 sm:pr-16 border-b border-slate-100 dark:border-slate-800">
+          <div class="flex flex-wrap items-center justify-between gap-2 mb-2.5">
+            <div class="flex items-center gap-2 flex-wrap min-w-0">
+              <span class="px-2.5 py-1 rounded text-xs font-bold bg-orange-50 text-orange-700 dark:bg-orange-950 dark:text-orange-300 border border-orange-200 dark:border-orange-800 flex-shrink-0">${p.course.course_code}</span>
+              <span class="text-xs text-slate-600 dark:text-slate-400 font-medium truncate">${p.course.course_title}</span>
             </div>
-            <span class="text-xs px-2.5 py-1 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 rounded font-medium">
+            <span class="text-xs px-2.5 py-1 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded font-semibold border border-slate-200/80 dark:border-slate-700 flex-shrink-0">
               ${p.trimester.session}
             </span>
           </div>
 
-          <h2 class="text-lg sm:text-xl font-bold text-slate-900 dark:text-white leading-snug break-words pr-8">
+          <h2 class="text-lg sm:text-xl font-bold text-slate-900 dark:text-white leading-snug break-words">
             ${this.escapeHtml(p.title)}
           </h2>
 
