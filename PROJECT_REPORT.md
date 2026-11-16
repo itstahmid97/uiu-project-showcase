@@ -118,7 +118,7 @@ A 3NF normalized, relational database system providing:
 
 ### 5.4 Software Requirements
 - **Operating System:** macOS / Windows 10/11 / Ubuntu Linux
-- **Database Server:** MySQL 8.0+ / MariaDB 10.4+ (XAMPP Environment)
+- **Database Server:** MySQL 8.0+ (XAMPP Environment)
 - **Web Server:** Apache 2.4+ (via XAMPP) / PHP Built-in Server
 - **Backend:** Pure PHP 8.2+ with PDO
 - **Frontend:** TypeScript, Tailwind CSS, Modern HTML5

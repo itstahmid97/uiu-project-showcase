@@ -5,7 +5,7 @@
 -- Final Project Database Schema & Dataset Specification
 -- Project Title: UIU Project Showcase & Archive System
 -- Course: CSE 3522 — Database Management Systems Laboratory
--- Target Environment: MySQL 8.0+ / MariaDB 10.4+ (XAMPP Environment)
+-- Target Environment: MySQL 8.0+ (XAMPP Environment)
 -- ==============================================================================
 
 -- Create Database if not exists with UTF-8 Multilingual support

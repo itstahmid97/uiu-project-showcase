@@ -2,7 +2,7 @@
 **Varsity Project Showcase, Awards, and Idea Repository**  
 *Department of Computer Science and Engineering, United International University (UIU)*  
 **Course:** CSE 3522: Database Management Systems Laboratory  
-**Target Environment:** Localhost via XAMPP (Apache 2.4+ & MySQL 8.0+ / MariaDB 10.4+)  
+**Target Environment:** Localhost via XAMPP (Apache 2.4+ & MySQL 8.0+)  
 **Stack:** PHP 8.x (Clean PDO, Prepared Statements) + TypeScript / Tailwind CSS + MySQL 8.0+
 
 ---
