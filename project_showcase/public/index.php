@@ -33,7 +33,15 @@
   <!-- Custom Stylesheet -->
   <link rel="stylesheet" href="css/style.css">
 </head>
-<body class="bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 min-h-screen flex flex-col antialiased selection:bg-orange-500 selection:text-white transition-colors duration-200">
+<body class="bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 min-h-screen flex flex-col antialiased selection:bg-orange-500 selection:text-white transition-colors duration-200 relative">
+
+  <!-- Ambient Moving Background Elements (Inspired by UIU UCAM Cloud) -->
+  <div class="ambient-bg-container" aria-hidden="true">
+    <div class="ambient-orb orb-orange"></div>
+    <div class="ambient-orb orb-amber"></div>
+    <div class="ambient-orb orb-purple"></div>
+    <canvas id="ambient-canvas"></canvas>
+  </div>
 
   <!-- ========================================== -->
   <!-- Top Navigation Bar                         -->
@@ -57,7 +65,7 @@
       <!-- Navigation Actions -->
       <div class="flex items-center space-x-1.5 sm:space-x-2.5 flex-shrink-0">
         <!-- SQL Lab Console (Viva Defense) -->
-        <button id="open-viva-btn" class="inline-flex items-center px-2.5 py-1.5 sm:px-3 rounded-lg text-xs font-semibold bg-blue-50 text-blue-700 dark:bg-blue-950/60 dark:text-blue-300 hover:bg-blue-100 dark:hover:bg-blue-900 transition border border-blue-200 dark:border-blue-800" title="Open SQL Viva Console">
+        <button id="open-viva-btn" class="inline-flex items-center px-2.5 py-1.5 sm:px-3 rounded-lg text-xs font-semibold bg-blue-50 text-blue-700 dark:bg-blue-950/60 dark:text-blue-300 hover:bg-blue-100 dark:hover:bg-blue-900 transition border border-blue-200 dark:border-blue-800 shadow-sm" title="Open SQL Viva Console">
           <svg class="w-3.5 h-3.5 sm:mr-1.5 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
           </svg>
@@ -65,7 +73,7 @@
         </button>
 
         <!-- Submit Project Button -->
-        <button id="open-add-project-btn" class="inline-flex items-center px-2.5 py-1.5 sm:px-3 rounded-lg text-xs font-semibold bg-orange-600 text-white hover:bg-orange-700 transition shadow-sm" title="Submit Project">
+        <button id="open-add-project-btn" class="btn-primary-animated inline-flex items-center px-2.5 py-1.5 sm:px-3.5 rounded-lg text-xs font-semibold bg-orange-600 text-white hover:bg-orange-700 transition shadow-sm" title="Submit Project">
           <svg class="w-3.5 h-3.5 sm:mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
           </svg>
@@ -482,7 +490,13 @@
             </div>
           </div>
 
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div>
+              <label for="new-project-supervisor" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Faculty Advisor</label>
+              <select id="new-project-supervisor" class="w-full text-xs px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-orange-500 dark:text-white focus:outline-none">
+                <!-- Populated dynamically -->
+              </select>
+            </div>
             <div>
               <label for="new-project-award" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Award Distinction</label>
               <select id="new-project-award" class="w-full text-xs px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-orange-500 dark:text-white focus:outline-none">

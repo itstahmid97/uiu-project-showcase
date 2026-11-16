@@ -1,11 +1,11 @@
 "use strict";
 /**
- * UIU Project Showcase & Archive System
+ * UIU Project Showcase & Research Archive
  * Student Project for CSE 3522: Database Management Systems Laboratory
  * Department of Computer Science & Engineering, United International University
  *
  * Handles client-side state, live search, dynamic filtering, modal dialogs,
- * and live SQL execution against MySQL for project defense.
+ * interactive canvas background animation, and live SQL execution against MySQL.
  */
 // Application State Controller
 class ShowcaseApp {
@@ -23,7 +23,9 @@ class ShowcaseApp {
         this.isDark = false;
         this.courses = [];
         this.trimesters = [];
+        this.supervisors = [];
         this.initTheme();
+        this.initAmbientCanvas();
         this.bindEvents();
         this.loadInitialData();
     }
@@ -59,6 +61,87 @@ class ShowcaseApp {
         el.innerHTML = this.isDark
             ? `<svg class="w-4 h-4 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>`
             : `<svg class="w-4 h-4 text-slate-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>`;
+    }
+    // ==========================================
+    // Interactive Floating Particles Background (Like UCAM Cloud)
+    // ==========================================
+    initAmbientCanvas() {
+        const canvas = document.getElementById('ambient-canvas');
+        if (!canvas)
+            return;
+        const ctx = canvas.getContext('2d');
+        if (!ctx)
+            return;
+        let width = (canvas.width = canvas.parentElement?.offsetWidth || window.innerWidth);
+        let height = (canvas.height = canvas.parentElement?.offsetHeight || 640);
+        const particles = [];
+        const count = Math.min(32, Math.max(16, Math.floor(width / 38)));
+        for (let i = 0; i < count; i++) {
+            particles.push({
+                x: Math.random() * width,
+                y: Math.random() * height,
+                vx: (Math.random() - 0.5) * 0.6,
+                vy: (Math.random() - 0.5) * 0.6,
+                radius: Math.random() * 2 + 1,
+                alpha: Math.random() * 0.4 + 0.25
+            });
+        }
+        let mouseX = -1000;
+        let mouseY = -1000;
+        window.addEventListener('mousemove', (e) => {
+            const rect = canvas.getBoundingClientRect();
+            mouseX = e.clientX - rect.left;
+            mouseY = e.clientY - rect.top;
+        });
+        const render = () => {
+            ctx.clearRect(0, 0, width, height);
+            const isDark = document.documentElement.classList.contains('dark');
+            const nodeColor = isDark ? '249, 115, 22' : '234, 88, 12'; // UIU Orange
+            // Connect lines
+            for (let i = 0; i < particles.length; i++) {
+                for (let j = i + 1; j < particles.length; j++) {
+                    const dx = particles[i].x - particles[j].x;
+                    const dy = particles[i].y - particles[j].y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    if (dist < 115) {
+                        const lineAlpha = (1 - dist / 115) * 0.16;
+                        ctx.strokeStyle = `rgba(${nodeColor}, ${lineAlpha})`;
+                        ctx.lineWidth = 1;
+                        ctx.beginPath();
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.stroke();
+                    }
+                }
+            }
+            // Move & draw nodes
+            particles.forEach((p) => {
+                // Mouse reaction
+                const mdx = p.x - mouseX;
+                const mdy = p.y - mouseY;
+                const mDist = Math.sqrt(mdx * mdx + mdy * mdy);
+                if (mDist < 90 && mDist > 0) {
+                    p.x += (mdx / mDist) * 1.2;
+                    p.y += (mdy / mDist) * 1.2;
+                }
+                p.x += p.vx;
+                p.y += p.vy;
+                if (p.x < 0 || p.x > width)
+                    p.vx *= -1;
+                if (p.y < 0 || p.y > height)
+                    p.vy *= -1;
+                ctx.fillStyle = `rgba(${nodeColor}, ${p.alpha})`;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                ctx.fill();
+            });
+            requestAnimationFrame(render);
+        };
+        requestAnimationFrame(render);
+        window.addEventListener('resize', () => {
+            width = canvas.width = canvas.parentElement?.offsetWidth || window.innerWidth;
+            height = canvas.height = canvas.parentElement?.offsetHeight || 640;
+        });
     }
     // Event Listeners Binding
     bindEvents() {
@@ -160,6 +243,9 @@ class ShowcaseApp {
             if (data.success) {
                 this.courses = data.meta.courses;
                 this.trimesters = data.meta.trimesters;
+                if (data.meta.supervisors) {
+                    this.supervisors = data.meta.supervisors;
+                }
                 this.renderStats(data.meta.stats);
                 this.renderFilterDropdowns(data.meta.courses, data.meta.trimesters);
                 this.renderPopularTech(data.meta.popular_techs);
@@ -236,6 +322,15 @@ class ShowcaseApp {
             });
             modalCourseSelect.innerHTML = html;
         }
+        // Modal supervisor dropdown
+        const modalSupervisorSelect = document.getElementById('new-project-supervisor');
+        if (modalSupervisorSelect) {
+            let html = '<option value="">Select Faculty Advisor (Optional)</option>';
+            this.supervisors.forEach(s => {
+                html += `<option value="${s.user_id}">${s.full_name} (${s.email})</option>`;
+            });
+            modalSupervisorSelect.innerHTML = html;
+        }
         // Trimester filter dropdown
         const trimesterSelect = document.getElementById('trimester-filter');
         if (trimesterSelect) {
@@ -265,7 +360,7 @@ class ShowcaseApp {
             const active = this.filters.tech.toLowerCase() === t.toLowerCase();
             html += `
         <button data-tech="${t}" class="tech-tag-btn px-2.5 py-1 rounded-lg text-[11px] font-medium transition ${active
-                ? 'bg-orange-600 text-white shadow-sm'
+                ? 'bg-orange-600 text-white shadow-sm ring-1 ring-orange-500'
                 : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-orange-50 hover:text-orange-600 dark:hover:bg-slate-700'}">
           #${t}
         </button>
@@ -281,7 +376,7 @@ class ShowcaseApp {
             });
         });
     }
-    // Render Project Cards (Zero truncation, clean responsive layout)
+    // Render Project Cards (Includes Faculty Advisor, Zero truncation, Clean Responsive Layout)
     renderProjects(projects) {
         const grid = document.getElementById('projects-grid');
         const countDisplay = document.getElementById('results-count-display');
@@ -338,8 +433,18 @@ class ShowcaseApp {
               ${this.escapeHtml(p.abstract)}
             </p>
 
+            <!-- Faculty Advisor Label -->
+            ${p.supervisor ? `
+              <div class="mt-2.5 flex items-center gap-1.5 text-[11px] text-slate-500 dark:text-slate-400">
+                <svg class="w-3.5 h-3.5 text-orange-600 dark:text-orange-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                </svg>
+                <span class="truncate">Advisor: <span class="font-medium text-slate-700 dark:text-slate-200">${this.escapeHtml(p.supervisor.name)}</span></span>
+              </div>
+            ` : ''}
+
             <!-- Tech Tags -->
-            <div class="flex flex-wrap gap-1.5 mt-3.5">
+            <div class="flex flex-wrap gap-1.5 mt-3">
               ${techTagsHtml}
               ${p.tech_tags.length > 4 ? `<span class="px-1.5 py-0.5 text-[10px] text-slate-400">+${p.tech_tags.length - 4} more</span>` : ''}
             </div>
@@ -396,7 +501,7 @@ class ShowcaseApp {
     `;
     }
     // ==========================================
-    // Project Details Modal (NO Supervisor)
+    // Project Details Modal (With Faculty Advisor Restored)
     // ==========================================
     async viewProjectDetail(projectId) {
         const modal = document.getElementById('project-detail-modal');
@@ -503,7 +608,31 @@ class ShowcaseApp {
             </div>
           </div>
 
-          <!-- Student Engineering Team (NO Supervisor) -->
+          <!-- Faculty Project Advisor -->
+          <div>
+            <h4 class="text-[11px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-2">Faculty Project Advisor</h4>
+            <div class="p-3.5 bg-gradient-to-r from-orange-50/80 to-amber-50/50 dark:from-slate-800/80 dark:to-slate-800/40 rounded-xl border border-orange-200/80 dark:border-slate-700 flex items-center justify-between gap-3">
+              <div class="flex items-center space-x-3 min-w-0">
+                <div class="w-10 h-10 rounded-full bg-orange-600 text-white font-bold flex items-center justify-center text-sm shadow-sm flex-shrink-0">
+                  ${(p.supervisor ? p.supervisor.name : 'F').charAt(0)}
+                </div>
+                <div class="min-w-0">
+                  <h5 class="font-bold text-slate-900 dark:text-white text-xs sm:text-sm truncate">
+                    ${this.escapeHtml(p.supervisor ? p.supervisor.name : 'Faculty Advisory Committee')}
+                  </h5>
+                  <p class="text-[11px] text-slate-500 dark:text-slate-400">Department of Computer Science & Engineering • UIU</p>
+                </div>
+              </div>
+              ${p.supervisor?.email ? `
+                <a href="mailto:${p.supervisor.email}" class="inline-flex items-center px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-white dark:bg-slate-700 text-orange-700 dark:text-orange-300 border border-orange-200 dark:border-slate-600 hover:bg-orange-50 dark:hover:bg-slate-600 transition flex-shrink-0">
+                  <svg class="w-3.5 h-3.5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 002 2v10a2 2 0 002 2z"/></svg>
+                  <span>Email Advisor</span>
+                </a>
+              ` : ''}
+            </div>
+          </div>
+
+          <!-- Student Engineering Team -->
           <div>
             <h4 class="text-[11px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-2">Student Engineering Team (${p.members.length} Members)</h4>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
@@ -511,7 +640,7 @@ class ShowcaseApp {
             </div>
           </div>
 
-          <!-- Links -->
+          <!-- Repositories & External Links -->
           <div>
             <h4 class="text-[11px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-2">Repositories & Artifacts</h4>
             <div class="flex flex-wrap gap-2.5">
@@ -691,7 +820,7 @@ class ShowcaseApp {
         }
     }
     // ==========================================
-    // Add Project Modal (NO Supervisor)
+    // Add Project Modal (With Faculty Advisor Dropdown)
     // ==========================================
     openAddProject() {
         const modal = document.getElementById('add-project-modal');
@@ -718,6 +847,7 @@ class ShowcaseApp {
         const titleInput = document.getElementById('new-project-title');
         const courseSelect = document.getElementById('new-project-course');
         const trimesterSelect = document.getElementById('new-project-trimester');
+        const supervisorSelect = document.getElementById('new-project-supervisor');
         const abstractInput = document.getElementById('new-project-abstract');
         const techInput = document.getElementById('new-project-tech');
         const githubInput = document.getElementById('new-project-github');
@@ -733,13 +863,13 @@ class ShowcaseApp {
             title: titleInput.value.trim(),
             course_id: parseInt(courseSelect.value, 10),
             trimester_id: parseInt(trimesterSelect.value, 10),
+            supervisor_id: supervisorSelect && supervisorSelect.value ? parseInt(supervisorSelect.value, 10) : null,
             abstract: abstractInput.value.trim(),
             tech_stack: techInput.value.trim(),
             github_url: githubInput ? githubInput.value.trim() : '',
             demo_url: demoInput ? demoInput.value.trim() : '',
             leader_name: leaderNameInput.value.trim(),
             leader_id: leaderIdInput.value.trim(),
-            supervisor_id: null, // Supervisor removed as per specification
             award_title: awardSelect ? awardSelect.value : 'None',
             prize_money: prizeInput ? parseFloat(prizeInput.value) || 0 : 0
         };
