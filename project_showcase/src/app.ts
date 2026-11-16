@@ -98,8 +98,6 @@ interface AuditLog {
 interface ProjectDetailResponse {
   success: boolean;
   project: Project & {
-    created_at: string;
-    updated_at: string;
     audit_trail: AuditLog[];
   };
   message?: string;
@@ -365,6 +363,9 @@ class ShowcaseApp {
         advisorEmailInput.value = match.email;
       }
     });
+
+    // Add additional team member button listener
+    document.getElementById('add-member-btn')?.addEventListener('click', () => this.addMemberRow());
 
     // Form submits
     document.getElementById('add-project-form')?.addEventListener('submit', (e) => this.submitProject(e));
@@ -992,6 +993,58 @@ class ShowcaseApp {
       document.body.style.overflow = 'auto';
       const feedback = document.getElementById('add-project-feedback');
       if (feedback) feedback.classList.add('hidden');
+      const membersContainer = document.getElementById('additional-members-container');
+      if (membersContainer) membersContainer.innerHTML = '';
+      this.updateAddMemberButtonState();
+    }
+  }
+
+  private addMemberRow(): void {
+    const container = document.getElementById('additional-members-container');
+    if (!container) return;
+
+    const currentRows = container.querySelectorAll('.member-entry-row').length;
+    if (currentRows >= 3) {
+      return; // Maximum 3 additional members + 1 leader = 4 members total
+    }
+
+    const memberNum = currentRows + 2; // Member 2, Member 3, Member 4
+    const row = document.createElement('div');
+    row.className = 'member-entry-row flex items-center gap-2';
+    row.innerHTML = `
+      <div class="flex-1">
+        <input type="text" placeholder="Member ${memberNum} Full Name" class="member-name-input w-full text-xs px-3 py-1.5 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-orange-500 dark:text-white focus:outline-none">
+      </div>
+      <div class="w-36">
+        <input type="text" placeholder="Student ID" class="member-id-input w-full text-xs px-3 py-1.5 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-orange-500 dark:text-white focus:outline-none font-mono">
+      </div>
+      <button type="button" class="remove-member-row-btn p-1.5 text-slate-400 hover:text-red-500 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700 transition" title="Remove Member">
+        ✕
+      </button>
+    `;
+
+    row.querySelector('.remove-member-row-btn')?.addEventListener('click', () => {
+      row.remove();
+      this.updateAddMemberButtonState();
+    });
+
+    container.appendChild(row);
+    (row.querySelector('.member-name-input') as HTMLInputElement)?.focus();
+    this.updateAddMemberButtonState();
+  }
+
+  private updateAddMemberButtonState(): void {
+    const btn = document.getElementById('add-member-btn') as HTMLButtonElement | null;
+    const container = document.getElementById('additional-members-container');
+    if (!btn || !container) return;
+
+    const count = container.querySelectorAll('.member-entry-row').length;
+    if (count >= 3) {
+      btn.classList.add('opacity-40', 'cursor-not-allowed');
+      btn.setAttribute('disabled', 'true');
+    } else {
+      btn.classList.remove('opacity-40', 'cursor-not-allowed');
+      btn.removeAttribute('disabled');
     }
   }
 
@@ -1018,6 +1071,20 @@ class ShowcaseApp {
       return;
     }
 
+    // Collect additional members
+    const memberRows = document.querySelectorAll('#additional-members-container .member-entry-row');
+    const additionalMembers: { name: string; student_id: string }[] = [];
+    memberRows.forEach(row => {
+      const nameInp = row.querySelector('.member-name-input') as HTMLInputElement | null;
+      const idInp = row.querySelector('.member-id-input') as HTMLInputElement | null;
+      if (nameInp && idInp && nameInp.value.trim() && idInp.value.trim()) {
+        additionalMembers.push({
+          name: nameInp.value.trim(),
+          student_id: idInp.value.trim()
+        });
+      }
+    });
+
     const payload = {
       title: titleInput.value.trim(),
       course_id: parseInt(courseSelect.value, 10),
@@ -1030,6 +1097,7 @@ class ShowcaseApp {
       demo_url: demoInput ? demoInput.value.trim() : '',
       leader_name: leaderNameInput.value.trim(),
       leader_id: leaderIdInput.value.trim(),
+      members: additionalMembers,
       award_title: awardSelect ? awardSelect.value : 'None',
       prize_money: prizeInput ? parseFloat(prizeInput.value) || 0 : 0
     };
@@ -1068,6 +1136,9 @@ class ShowcaseApp {
           });
 
           (document.getElementById('add-project-form') as HTMLFormElement)?.reset();
+          const membersContainer = document.getElementById('additional-members-container');
+          if (membersContainer) membersContainer.innerHTML = '';
+          this.updateAddMemberButtonState();
           this.renderPopularTech(this.popularTechs);
           this.renderModalTechSuggestions();
 

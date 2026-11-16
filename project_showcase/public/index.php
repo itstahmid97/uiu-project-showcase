@@ -423,6 +423,21 @@
             </div>
           </div>
 
+          <!-- Additional Team Members Section -->
+          <div class="p-3 bg-slate-50 dark:bg-slate-800/40 rounded-xl border border-slate-200 dark:border-slate-700/60">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
+                <span>👥</span> Team Members <span class="text-[10px] text-slate-400 font-normal">(Optional, up to 3 additional members)</span>
+              </span>
+              <button type="button" id="add-member-btn" class="inline-flex items-center gap-1 text-[11px] font-semibold text-orange-600 dark:text-orange-400 hover:text-orange-700 hover:underline">
+                <span class="text-sm font-bold">+</span> Add Member
+              </button>
+            </div>
+            <div id="additional-members-container" class="space-y-2">
+              <!-- Dynamically added rows -->
+            </div>
+          </div>
+
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
               <label for="new-project-advisor-name" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Faculty Advisor Name</label>

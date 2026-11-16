@@ -39,6 +39,7 @@ try {
     $demoUrl      = isset($input['demo_url']) && !empty(trim($input['demo_url'])) ? trim($input['demo_url']) : null;
     $leaderName   = isset($input['leader_name']) ? trim($input['leader_name']) : '';
     $leaderId     = isset($input['leader_id']) ? trim($input['leader_id']) : '';
+    $additionalMembers = isset($input['members']) && is_array($input['members']) ? $input['members'] : [];
     $advisorName  = isset($input['advisor_name']) ? trim($input['advisor_name']) : '';
     $advisorEmail = isset($input['advisor_email']) ? trim($input['advisor_email']) : '';
     $supervisorId = isset($input['supervisor_id']) && is_numeric($input['supervisor_id']) ? (int)$input['supervisor_id'] : null;
@@ -180,6 +181,47 @@ try {
         ':pid' => $newProjectId,
         ':uid' => $leaderUserId
     ]);
+
+    // 3b. Insert Additional Team Members (Trigger 2 trg_enforce_team_size_limit verifies total members <= 4)
+    if (!empty($additionalMembers) && is_array($additionalMembers)) {
+        foreach ($additionalMembers as $m) {
+            $mName = isset($m['name']) ? trim($m['name']) : '';
+            $mId   = isset($m['student_id']) ? trim($m['student_id']) : (isset($m['id']) ? trim($m['id']) : '');
+
+            if (!empty($mName) && !empty($mId)) {
+                $mUserStmt = $pdo->prepare("SELECT user_id FROM users WHERE student_or_faculty_id = :sid LIMIT 1");
+                $mUserStmt->execute([':sid' => $mId]);
+                $existingMUser = $mUserStmt->fetch();
+
+                if ($existingMUser) {
+                    $mUserId = (int)$existingMUser['user_id'];
+                } else {
+                    $cleanMEmail = strtolower(preg_replace('/[^a-zA-Z0-9]/', '', $mId)) . '@bscse.uiu.ac.bd';
+                    $insertMStmt = $pdo->prepare("
+                        INSERT INTO users (student_or_faculty_id, full_name, email, role, password_hash, dept_id)
+                        VALUES (:sid, :name, :email, 'student', '$2y$10$wE96X1vQz76RkKxO2x6Lzuxl6M2m8v6BskjQyZ3d4y2m4f7H5r6X2', 1)
+                    ");
+                    $insertMStmt->execute([
+                        ':sid'   => $mId,
+                        ':name'  => $mName,
+                        ':email' => $cleanMEmail
+                    ]);
+                    $mUserId = (int)$pdo->lastInsertId();
+                }
+
+                if ($mUserId !== $leaderUserId) {
+                    $insertMemberStmt = $pdo->prepare("
+                        INSERT IGNORE INTO project_members (project_id, user_id, role_in_team, contribution_details)
+                        VALUES (:pid, :uid, 'Member', 'Module development & system implementation')
+                    ");
+                    $insertMemberStmt->execute([
+                        ':pid' => $newProjectId,
+                        ':uid' => $mUserId
+                    ]);
+                }
+            }
+        }
+    }
 
     // 4. If Award is selected, map to showcase event and insert award
     if ($awardTitle !== 'None' && !empty($awardTitle)) {

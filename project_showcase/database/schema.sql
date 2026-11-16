@@ -53,8 +53,7 @@ SET FOREIGN_KEY_CHECKS = 1;
 CREATE TABLE `departments` (
     `dept_id` INT AUTO_INCREMENT PRIMARY KEY,
     `dept_code` VARCHAR(20) NOT NULL UNIQUE,
-    `dept_name` VARCHAR(100) NOT NULL,
-    `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    `dept_name` VARCHAR(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- 2. Courses Table
@@ -66,7 +65,6 @@ CREATE TABLE `courses` (
     `course_title` VARCHAR(150) NOT NULL,
     `dept_id` INT NOT NULL,
     `is_active` TINYINT(1) NOT NULL DEFAULT 1,
-    `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT `fk_courses_department`
         FOREIGN KEY (`dept_id`) REFERENCES `departments` (`dept_id`)
         ON UPDATE CASCADE ON DELETE RESTRICT
@@ -79,7 +77,6 @@ CREATE TABLE `trimesters` (
     `trimester_code` VARCHAR(10) NOT NULL UNIQUE, -- e.g., '251', '252', '253', '261'
     `term_name` ENUM('Spring', 'Summer', 'Fall') NOT NULL,
     `year` INT NOT NULL,
-    `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT `chk_trimester_year` CHECK (`year` >= 2020 AND `year` <= 2035)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -93,7 +90,6 @@ CREATE TABLE `users` (
     `role` ENUM('student', 'faculty', 'admin') NOT NULL DEFAULT 'student',
     `password_hash` VARCHAR(255) NOT NULL,
     `dept_id` INT DEFAULT NULL,
-    `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT `fk_users_department`
         FOREIGN KEY (`dept_id`) REFERENCES `departments` (`dept_id`)
         ON UPDATE CASCADE ON DELETE SET NULL
@@ -114,8 +110,6 @@ CREATE TABLE `projects` (
     `created_by` INT NOT NULL,         -- Submitting student / Team Leader
     `supervisor_id` INT DEFAULT NULL,   -- Faculty supervisor / Lab instructor
     `status` ENUM('Draft', 'Submitted', 'Approved', 'Featured') NOT NULL DEFAULT 'Approved',
-    `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     CONSTRAINT `chk_project_title_non_empty` CHECK (CHAR_LENGTH(TRIM(`title`)) >= 3),
     CONSTRAINT `fk_projects_course`
         FOREIGN KEY (`course_id`) REFERENCES `courses` (`course_id`)
@@ -139,7 +133,6 @@ CREATE TABLE `project_members` (
     `user_id` INT NOT NULL,
     `role_in_team` ENUM('Leader', 'Member') NOT NULL DEFAULT 'Member',
     `contribution_details` VARCHAR(255) DEFAULT NULL,
-    `joined_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT `uk_project_member_unique` UNIQUE (`project_id`, `user_id`),
     CONSTRAINT `fk_members_project`
         FOREIGN KEY (`project_id`) REFERENCES `projects` (`project_id`)
@@ -159,7 +152,6 @@ CREATE TABLE `showcase_events` (
     `event_date` DATE NOT NULL,
     `venue` VARCHAR(150) NOT NULL,
     `is_locked` TINYINT(1) NOT NULL DEFAULT 0, -- 1 when judging finishes and results are sealed
-    `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT `fk_events_course`
         FOREIGN KEY (`course_id`) REFERENCES `courses` (`course_id`)
         ON UPDATE CASCADE ON DELETE RESTRICT,
@@ -177,7 +169,6 @@ CREATE TABLE `awards` (
     `award_title` ENUM('1st Prize', '2nd Prize', '3rd Prize', 'Best FYDP', 'Best Innovation', 'Honorable Mention', 'Runner Up') NOT NULL,
     `prize_money` DECIMAL(10,2) NOT NULL DEFAULT 0.00,
     `remarks` TEXT,
-    `awarded_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT `chk_prize_money_positive` CHECK (`prize_money` >= 0.00),
     CONSTRAINT `uk_event_project_award` UNIQUE (`project_id`, `event_id`),
     CONSTRAINT `fk_awards_project`
