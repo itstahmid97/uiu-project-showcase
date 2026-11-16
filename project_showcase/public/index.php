@@ -39,37 +39,37 @@
   <!-- Top Navigation Bar                         -->
   <!-- ========================================== -->
   <header class="sticky top-0 z-40 w-full glass-header border-b border-slate-200/80 dark:border-slate-800/80">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-2 sm:gap-4 min-w-0">
       
       <!-- Brand Logo -->
-      <a href="#" class="flex items-center space-x-3 group">
-        <div class="w-10 h-10 rounded-xl bg-orange-600 flex items-center justify-center text-white shadow-md shadow-orange-500/20 group-hover:bg-orange-700 transition">
+      <a href="#" class="flex items-center space-x-2.5 sm:space-x-3 group min-w-0 flex-shrink-0">
+        <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-orange-600 flex items-center justify-center text-white shadow-md shadow-orange-500/20 group-hover:bg-orange-700 transition flex-shrink-0">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
           </svg>
         </div>
-        <div>
-          <span class="text-base font-bold tracking-tight text-slate-900 dark:text-white">UIU <span class="text-orange-600">Showcase</span></span>
-          <p class="text-[11px] text-slate-500 dark:text-slate-400 font-medium">Project & Research Archive</p>
+        <div class="min-w-0">
+          <span class="text-sm sm:text-base font-bold tracking-tight text-slate-900 dark:text-white">UIU <span class="text-orange-600">Showcase</span></span>
+          <p class="text-[10px] sm:text-[11px] text-slate-500 dark:text-slate-400 font-medium hidden sm:block">Project & Research Archive</p>
         </div>
       </a>
 
       <!-- Navigation Actions -->
-      <div class="flex items-center space-x-2 sm:space-x-3">
+      <div class="flex items-center space-x-1.5 sm:space-x-2.5 flex-shrink-0">
         <!-- SQL Lab Console (Viva Defense) -->
-        <button id="open-viva-btn" class="inline-flex items-center px-3 py-1.5 rounded-lg text-xs font-semibold bg-blue-50 text-blue-700 dark:bg-blue-950/60 dark:text-blue-300 hover:bg-blue-100 dark:hover:bg-blue-900 transition border border-blue-200 dark:border-blue-800" title="Open SQL Viva Console">
-          <svg class="w-4 h-4 mr-1.5 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <button id="open-viva-btn" class="inline-flex items-center px-2.5 py-1.5 sm:px-3 rounded-lg text-xs font-semibold bg-blue-50 text-blue-700 dark:bg-blue-950/60 dark:text-blue-300 hover:bg-blue-100 dark:hover:bg-blue-900 transition border border-blue-200 dark:border-blue-800" title="Open SQL Viva Console">
+          <svg class="w-3.5 h-3.5 sm:mr-1.5 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
           </svg>
-          <span class="hidden sm:inline">SQL Lab &</span> Viva Console
+          <span class="hidden md:inline">SQL Lab & </span><span>Viva</span>
         </button>
 
         <!-- Submit Project Button -->
-        <button id="open-add-project-btn" class="inline-flex items-center px-3 py-1.5 rounded-lg text-xs font-semibold bg-orange-600 text-white hover:bg-orange-700 transition shadow-sm" title="Submit Project">
-          <svg class="w-3.5 h-3.5 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <button id="open-add-project-btn" class="inline-flex items-center px-2.5 py-1.5 sm:px-3 rounded-lg text-xs font-semibold bg-orange-600 text-white hover:bg-orange-700 transition shadow-sm" title="Submit Project">
+          <svg class="w-3.5 h-3.5 sm:mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
           </svg>
-          <span>Submit Project</span>
+          <span class="hidden sm:inline">Submit </span><span>Project</span>
         </button>
 
         <!-- Add Course Button (Extensibility Demo) -->
@@ -81,7 +81,7 @@
         </button>
 
         <!-- Theme Toggle -->
-        <button id="theme-toggle-btn" class="p-2 rounded-lg text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition" aria-label="Toggle Theme">
+        <button id="theme-toggle-btn" class="p-2 rounded-lg text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition flex-shrink-0" aria-label="Toggle Theme">
           <div id="theme-toggle-icon"></div>
         </button>
       </div>
@@ -91,37 +91,37 @@
   <!-- ========================================== -->
   <!-- Hero Section                               -->
   <!-- ========================================== -->
-  <section class="relative bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 overflow-hidden py-12 md:py-16">
+  <section class="relative bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 overflow-hidden py-10 md:py-16">
     <!-- Background Pattern & Subtle Glow -->
     <div class="absolute inset-0 bg-grid-pattern opacity-60 pointer-events-none"></div>
     <div class="hero-glow"></div>
 
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-      <div class="max-w-3xl">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full min-w-0">
+      <div class="max-w-3xl w-full">
         <!-- University Badge -->
-        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-orange-50 text-orange-700 dark:bg-orange-950/60 dark:text-orange-300 border border-orange-200 dark:border-orange-800/60 mb-4">
-          <span class="w-2 h-2 rounded-full bg-orange-500 animate-pulse"></span>
-          <span>United International University • Research & Engineering Archive</span>
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-orange-50 text-orange-700 dark:bg-orange-950/60 dark:text-orange-300 border border-orange-200 dark:border-orange-800/60 mb-4 max-w-full">
+          <span class="w-2 h-2 rounded-full bg-orange-500 animate-pulse flex-shrink-0"></span>
+          <span class="truncate">UIU • Research & Engineering Archive</span>
         </div>
 
         <!-- Headline -->
-        <h1 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-tight">
+        <h1 class="text-2xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-tight">
           Student Project Showcase & <span class="text-orange-600">Innovation Archive</span>
         </h1>
 
         <!-- Extensible Subtitle (No hardcoded course lists) -->
-        <p class="mt-3 text-sm sm:text-base text-slate-600 dark:text-slate-400 leading-relaxed max-w-2xl">
+        <p class="mt-3 text-xs sm:text-base text-slate-600 dark:text-slate-400 leading-relaxed max-w-2xl">
           A centralized university repository to search, review, and evaluate student capstone and laboratory projects across all departments and academic trimesters.
         </p>
 
         <!-- Search Bar -->
-        <div class="mt-6 relative max-w-xl">
+        <div class="mt-6 relative w-full max-w-xl">
           <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
             </svg>
           </div>
-          <input type="text" id="hero-search-input" placeholder="Search by title, keywords (e.g. ESP32, Flutter, PyTorch), or student name..." class="w-full pl-10 pr-10 py-3 bg-slate-50 dark:bg-slate-800/90 border border-slate-300 dark:border-slate-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 dark:text-white placeholder-slate-400 shadow-sm transition">
+          <input type="text" id="hero-search-input" placeholder="Search by title, keywords (e.g. ESP32, Flutter, PyTorch), or student name..." class="w-full pl-10 pr-10 py-3 bg-slate-50 dark:bg-slate-800/90 border border-slate-300 dark:border-slate-700 rounded-xl text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 dark:text-white placeholder-slate-400 shadow-sm transition">
           <button id="clear-search-btn" class="hidden absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 text-xs">
             ✕
           </button>
