@@ -277,73 +277,6 @@
   </div>
 
   <!-- ========================================== -->
-  <!-- SQL Lab & Viva Explorer Modal              -->
-  <!-- ========================================== -->
-  <div id="viva-modal" class="fixed inset-0 z-50 hidden overflow-y-auto" role="dialog" aria-modal="true">
-    <div id="viva-modal-backdrop" class="fixed inset-0 bg-slate-950/70 backdrop-blur-sm transition-opacity"></div>
-
-    <div class="flex min-h-full items-center justify-center p-2 sm:p-4 text-center">
-      <div class="modal-dialog-panel relative transform overflow-hidden rounded-2xl bg-white dark:bg-slate-900 text-left shadow-2xl transition-all w-full max-w-5xl border border-slate-200 dark:border-slate-800 flex flex-col max-h-[92vh] my-2 sm:my-6 animate-modal-pop">
-        
-        <!-- Modal Header -->
-        <div class="p-4 sm:p-5 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between gap-3">
-          <div class="flex items-center space-x-3">
-            <div class="w-10 h-10 rounded-xl bg-blue-100 dark:bg-blue-950 text-blue-600 dark:text-blue-400 flex items-center justify-center font-bold flex-shrink-0">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-              </svg>
-            </div>
-            <div>
-              <h3 class="text-sm sm:text-base font-bold text-slate-900 dark:text-white">Database Analytics & SQL Console</h3>
-              <p class="text-xs text-slate-500">Live Execution of 12 Analytical Joins, Subqueries & Aggregations</p>
-            </div>
-          </div>
-          <button id="close-viva-modal-btn" class="text-slate-400 hover:text-slate-600 dark:hover:text-white p-2 rounded-lg bg-slate-100 dark:bg-slate-800">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-            </svg>
-          </button>
-        </div>
-
-        <!-- Query Selector for Small Screens -->
-        <div class="p-3 border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 md:hidden">
-          <label for="mobile-viva-select" class="block text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-1">Select Query:</label>
-          <select id="mobile-viva-select" class="w-full text-xs py-2 px-3 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg dark:text-white">
-            <!-- Populated dynamically -->
-          </select>
-        </div>
-
-        <!-- Two-Pane Layout -->
-        <div class="flex-1 grid grid-cols-1 md:grid-cols-12 overflow-hidden min-h-0">
-          <div class="hidden md:block md:col-span-4 border-r border-slate-200 dark:border-slate-800 p-3 sm:p-4 overflow-y-auto space-y-2 bg-slate-50/50 dark:bg-slate-950/40" id="viva-queries-list">
-            <!-- Populated dynamically -->
-          </div>
-
-          <div class="md:col-span-8 p-4 sm:p-6 overflow-y-auto" id="viva-query-output">
-            <div class="py-12 text-center text-slate-400">
-              Select a query from the left catalogue to execute live against MySQL.
-            </div>
-          </div>
-        </div>
-
-        <!-- Footer -->
-        <div class="p-3.5 border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 flex flex-wrap items-center justify-between gap-2 text-[11px] text-slate-500">
-          <div class="flex items-center gap-3">
-            <span>3NF Normalization</span>
-            <span>•</span>
-            <span>3 SQL Views</span>
-            <span>•</span>
-            <span>6 B-Tree Indexes</span>
-            <span>•</span>
-            <span>6 Triggers</span>
-          </div>
-          <span class="font-mono text-[10px] text-slate-400">Engine: MySQL 8.0+ (InnoDB)</span>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ========================================== -->
   <!-- Add Course Modal (Extensibility Demo)      -->
   <!-- ========================================== -->
   <div id="add-course-modal" class="fixed inset-0 z-50 hidden overflow-y-auto" role="dialog" aria-modal="true">
@@ -457,8 +390,15 @@
           </div>
 
           <div>
-            <label for="new-project-tech" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Technologies & Stack * (Comma-separated)</label>
+            <div class="flex items-center justify-between mb-1">
+              <label for="new-project-tech" class="block text-xs font-semibold text-slate-700 dark:text-slate-300">Technologies & Stack * (Comma-separated)</label>
+              <span class="text-[10px] text-slate-400">Click suggestions to auto-add</span>
+            </div>
             <input type="text" id="new-project-tech" required placeholder="e.g. Next.js, FastAPI, PyTorch, Docker, MySQL" class="w-full text-xs px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-orange-500 dark:text-white focus:outline-none">
+            <!-- Dynamic Auto-updating Tech Suggestions -->
+            <div class="mt-2 flex flex-wrap items-center gap-1.5" id="tech-modal-suggestions">
+              <!-- Rendered dynamically -->
+            </div>
           </div>
 
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -526,10 +466,8 @@
         <p class="font-bold text-slate-900 dark:text-slate-100">UIU Project Showcase</p>
         <p class="text-[11px] text-slate-600 dark:text-slate-400 font-medium">Student Engineering & Capstone Repository • Department of Computer Science & Engineering, UIU</p>
       </div>
-      <div class="text-[11px] text-slate-500 dark:text-slate-400 sm:text-right flex items-center gap-2 justify-center sm:justify-end">
-        <span>United International University • Dhaka, Bangladesh</span>
-        <span class="text-slate-300 dark:text-slate-700">•</span>
-        <button id="open-viva-footer-btn" class="hover:text-orange-600 dark:hover:text-orange-400 transition underline decoration-dotted font-medium">SQL Console</button>
+      <div class="text-[11px] text-slate-500 dark:text-slate-400 sm:text-right">
+        <p>United International University • Dhaka, Bangladesh</p>
       </div>
     </div>
   </footer>

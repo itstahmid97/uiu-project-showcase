@@ -126,24 +126,6 @@ interface ProjectsApiResponse {
   message?: string;
 }
 
-interface QueryCatalogItem {
-  id: number;
-  category: string;
-  title: string;
-  description: string;
-  sql: string;
-}
-
-interface QueryResultResponse {
-  success: boolean;
-  meta: QueryCatalogItem;
-  execution_ms: number;
-  row_count: number;
-  columns: string[];
-  rows: Array<Record<string, any>>;
-  message?: string;
-}
-
 // Application State Controller
 class ShowcaseApp {
   private apiBase = 'api';
@@ -161,6 +143,12 @@ class ShowcaseApp {
   private courses: Course[] = [];
   private trimesters: Trimester[] = [];
   private supervisors: SupervisorItem[] = [];
+  private popularTechs: string[] = [];
+  private allKnownTechs: Set<string> = new Set([
+    'Python', 'React', 'FastAPI', 'Node.js', 'PyTorch', 'Docker', 'MySQL', 'Flutter',
+    'ESP32', 'OpenCV', 'Next.js', 'Arduino', 'Tailwind CSS', 'TensorFlow', 'PostgreSQL',
+    'Django', 'TypeScript', 'MongoDB', 'Spring Boot', 'Kotlin', 'Firebase'
+  ]);
 
   constructor() {
     this.initTheme();
@@ -359,18 +347,12 @@ class ShowcaseApp {
     document.getElementById('open-add-course-btn')?.addEventListener('click', () => this.openAddCourse());
     document.getElementById('close-add-course-btn')?.addEventListener('click', () => this.closeAddCourse());
 
-    document.getElementById('open-viva-btn')?.addEventListener('click', () => this.openVivaModal());
-    document.getElementById('open-viva-footer-btn')?.addEventListener('click', () => this.openVivaModal());
-    document.getElementById('close-viva-modal-btn')?.addEventListener('click', () => this.closeVivaModal());
-    document.getElementById('viva-modal-backdrop')?.addEventListener('click', () => this.closeVivaModal());
-
     document.getElementById('close-detail-modal-btn')?.addEventListener('click', () => this.closeDetailModal());
     document.getElementById('detail-modal-backdrop')?.addEventListener('click', () => this.closeDetailModal());
 
-    // Mobile query dropdown
-    document.getElementById('mobile-viva-select')?.addEventListener('change', (e) => {
-      const qid = parseInt((e.target as HTMLSelectElement).value, 10);
-      if (qid) this.runVivaQuery(qid);
+    // Interactive Tech Suggestions inside modal
+    document.getElementById('new-project-tech')?.addEventListener('input', () => {
+      this.renderModalTechSuggestions();
     });
 
     // Form submits
@@ -383,7 +365,6 @@ class ShowcaseApp {
         this.closeDetailModal();
         this.closeAddProject();
         this.closeAddCourse();
-        this.closeVivaModal();
       }
     });
   }
@@ -423,9 +404,23 @@ class ShowcaseApp {
           this.supervisors = data.meta.supervisors;
         }
 
+        // Dynamically track all technologies
+        if (data.meta.popular_techs) {
+          this.popularTechs = data.meta.popular_techs;
+          data.meta.popular_techs.forEach(t => this.allKnownTechs.add(t));
+        }
+        if (data.projects) {
+          data.projects.forEach(p => {
+            if (p.tech_tags) {
+              p.tech_tags.forEach(t => this.allKnownTechs.add(t));
+            }
+          });
+        }
+
         this.renderStats(data.meta.stats);
         this.renderFilterDropdowns(data.meta.courses, data.meta.trimesters);
-        this.renderPopularTech(data.meta.popular_techs);
+        this.renderPopularTech(this.popularTechs);
+        this.renderModalTechSuggestions();
         this.renderProjects(data.projects);
       } else {
         this.showDatabaseError(data.message || 'Unable to retrieve projects from database.');
@@ -895,143 +890,67 @@ class ShowcaseApp {
   }
 
   // ==========================================
-  // SQL Lab & Viva Explorer Modal
+  // Dynamic Tech Suggestions for Project Submission
   // ==========================================
-  public openVivaModal(): void {
-    const modal = document.getElementById('viva-modal');
-    if (modal) {
-      modal.classList.remove('hidden');
-      document.body.style.overflow = 'hidden';
-      this.loadVivaCatalog();
-    }
-  }
+  private renderModalTechSuggestions(): void {
+    const container = document.getElementById('tech-modal-suggestions');
+    const input = document.getElementById('new-project-tech') as HTMLInputElement | null;
+    if (!container || !input) return;
 
-  public closeVivaModal(): void {
-    const modal = document.getElementById('viva-modal');
-    if (modal) {
-      modal.classList.add('hidden');
-      document.body.style.overflow = 'auto';
-    }
-  }
+    const currentTags = input.value
+      .split(',')
+      .map(t => t.trim().toLowerCase())
+      .filter(t => t.length > 0);
 
-  private async loadVivaCatalog(): Promise<void> {
-    const listContainer = document.getElementById('viva-queries-list');
-    const mobileSelect = document.getElementById('mobile-viva-select') as HTMLSelectElement | null;
-    if (!listContainer) return;
+    const suggestions = Array.from(this.allKnownTechs).slice(0, 18);
 
-    try {
-      const res = await fetch(`${this.apiBase}/queries.php`);
-      const data = await res.json();
-
-      if (data.success && data.catalog) {
-        let listHtml = '';
-        let selectHtml = '';
-
-        data.catalog.forEach((q: QueryCatalogItem) => {
-          listHtml += `
-            <button onclick="app.runVivaQuery(${q.id})" class="w-full text-left p-2.5 rounded-xl border border-slate-200 dark:border-slate-800 hover:border-orange-500 dark:hover:border-orange-500 hover:bg-orange-50/40 dark:hover:bg-slate-800/80 transition flex items-start justify-between group">
-              <div class="min-w-0 pr-2">
-                <span class="text-[10px] font-bold uppercase tracking-wider text-orange-600 dark:text-orange-400 block">${q.category}</span>
-                <h5 class="text-xs font-bold text-slate-800 dark:text-slate-200 group-hover:text-orange-600 transition truncate">${q.id}. ${q.title}</h5>
-                <p class="text-[11px] text-slate-500 dark:text-slate-400 line-clamp-1 mt-0.5">${q.description}</p>
-              </div>
-              <span class="text-slate-400 group-hover:text-orange-500 text-xs font-bold flex-shrink-0 mt-1">▶</span>
-            </button>
-          `;
-          selectHtml += `<option value="${q.id}">Query ${q.id}: ${q.title}</option>`;
-        });
-
-        listContainer.innerHTML = listHtml;
-        if (mobileSelect) mobileSelect.innerHTML = selectHtml;
-
-        // Auto run query 1
-        this.runVivaQuery(1);
-      }
-    } catch (err) {
-      listContainer.innerHTML = `<p class="p-4 text-xs text-red-500">Failed to load SQL catalog.</p>`;
-    }
-  }
-
-  public async runVivaQuery(queryId: number): Promise<void> {
-    const output = document.getElementById('viva-query-output');
-    if (!output) return;
-
-    const mobileSelect = document.getElementById('mobile-viva-select') as HTMLSelectElement | null;
-    if (mobileSelect && mobileSelect.value !== String(queryId)) {
-      mobileSelect.value = String(queryId);
-    }
-
-    output.innerHTML = `
-      <div class="py-12 text-center">
-        <div class="inline-block animate-spin w-6 h-6 border-3 border-orange-500 border-t-transparent rounded-full mb-2"></div>
-        <p class="text-xs text-slate-500">Executing prepared SQL query in MySQL engine...</p>
-      </div>
-    `;
-
-    try {
-      const res = await fetch(`${this.apiBase}/queries.php?id=${queryId}`);
-      const data: QueryResultResponse = await res.json();
-
-      if (!data.success) {
-        output.innerHTML = `<p class="p-4 text-xs text-red-500">Execution Error: ${data.message}</p>`;
-        return;
-      }
-
-      // Headers
-      const ths = data.columns.map(c => 
-        `<th class="py-2.5 px-3 text-left font-mono font-bold text-[11px] text-slate-700 dark:text-slate-200 border-b border-slate-200 dark:border-slate-700 whitespace-nowrap bg-slate-100 dark:bg-slate-800">${c}</th>`
-      ).join('');
-
-      // Rows (Complete text, no cell truncation)
-      const trs = data.rows.map(r => `
-        <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/40 border-b border-slate-100 dark:border-slate-800/80 text-xs font-mono">
-          ${data.columns.map(c => `<td class="py-2 px-3 text-slate-700 dark:text-slate-300 break-words max-w-xs">${this.escapeHtml(String(r[c] ?? 'NULL'))}</td>`).join('')}
-        </tr>
-      `).join('');
-
-      output.innerHTML = `
-        <div>
-          <!-- Query Header -->
-          <div class="flex flex-wrap items-center justify-between gap-2 p-3 bg-slate-100 dark:bg-slate-800 rounded-xl mb-3">
-            <div class="min-w-0">
-              <span class="text-[10px] font-bold text-orange-600 dark:text-orange-400 uppercase tracking-wider">${data.meta.category}</span>
-              <h4 class="text-xs sm:text-sm font-bold text-slate-900 dark:text-white">${data.meta.id}. ${data.meta.title}</h4>
-              <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">${data.meta.description}</p>
-            </div>
-            <div class="flex items-center gap-2 flex-shrink-0">
-              <span class="px-2 py-0.5 rounded text-[11px] bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300 font-bold font-mono">
-                ⚡ ${data.execution_ms} ms
-              </span>
-              <span class="px-2 py-0.5 rounded text-[11px] bg-slate-200 dark:bg-slate-700 text-slate-800 dark:text-slate-200 font-semibold font-mono">
-                ${data.row_count} rows
-              </span>
-            </div>
-          </div>
-
-          <!-- SQL Code View -->
-          <div class="mb-3 relative group">
-            <pre class="p-3 bg-slate-900 text-amber-300 dark:bg-black rounded-xl text-xs overflow-x-auto font-mono whitespace-pre-wrap leading-relaxed select-all">${this.escapeHtml(data.meta.sql)}</pre>
-            <button onclick="navigator.clipboard.writeText('${this.escapeJs(data.meta.sql)}'); this.textContent = 'Copied!'; setTimeout(() => this.textContent = 'Copy SQL', 1500);" class="absolute top-2 right-2 px-2 py-1 rounded bg-slate-800 text-slate-300 hover:text-white text-[10px] font-mono border border-slate-700">
-              Copy SQL
-            </button>
-          </div>
-
-          <!-- Results Table -->
-          <div class="overflow-x-auto border border-slate-200 dark:border-slate-800 rounded-xl max-h-[380px] overflow-y-auto">
-            <table class="w-full border-collapse">
-              <thead class="sticky top-0 z-10 shadow-sm">
-                <tr>${ths}</tr>
-              </thead>
-              <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
-                ${trs}
-              </tbody>
-            </table>
-          </div>
-        </div>
+    let html = '';
+    suggestions.forEach(t => {
+      const isSelected = currentTags.includes(t.toLowerCase());
+      html += `
+        <button type="button" data-modal-tech="${t}" class="modal-tech-chip px-2 py-0.5 rounded-md text-[11px] font-medium transition cursor-pointer flex items-center gap-1 border ${
+          isSelected
+            ? 'bg-orange-600 text-white border-orange-600 shadow-xs'
+            : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-orange-100 hover:text-orange-700 dark:hover:bg-slate-700 border-slate-200 dark:border-slate-700'
+        }">
+          <span>${isSelected ? '✓' : '+'}</span>
+          <span>${t}</span>
+        </button>
       `;
-    } catch (err) {
-      output.innerHTML = `<p class="p-4 text-xs text-red-500">Execution failed.</p>`;
+    });
+
+    container.innerHTML = html;
+
+    container.querySelectorAll('.modal-tech-chip').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const tech = (e.currentTarget as HTMLButtonElement).getAttribute('data-modal-tech');
+        if (!tech) return;
+        this.toggleModalTech(tech);
+      });
+    });
+  }
+
+  private toggleModalTech(tech: string): void {
+    const input = document.getElementById('new-project-tech') as HTMLInputElement | null;
+    if (!input) return;
+
+    let tags = input.value
+      .split(',')
+      .map(t => t.trim())
+      .filter(t => t.length > 0);
+
+    const lower = tech.toLowerCase();
+    const idx = tags.findIndex(t => t.toLowerCase() === lower);
+
+    if (idx >= 0) {
+      tags.splice(idx, 1);
+    } else {
+      tags.push(tech);
     }
+
+    input.value = tags.join(', ');
+    this.renderModalTechSuggestions();
   }
 
   // ==========================================
@@ -1042,6 +961,7 @@ class ShowcaseApp {
     if (modal) {
       modal.classList.remove('hidden');
       document.body.style.overflow = 'hidden';
+      this.renderModalTechSuggestions();
       (document.getElementById('new-project-title') as HTMLInputElement)?.focus();
     }
   }
@@ -1113,7 +1033,23 @@ class ShowcaseApp {
           feedback.className = 'p-3 bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-300 dark:border-emerald-700 text-emerald-800 dark:text-emerald-200 text-xs rounded-xl mb-4';
           feedback.textContent = 'Project registered into database successfully!';
 
+          // Extract technologies from submitted project and auto-update tech list
+          const submittedTechs = payload.tech_stack
+            .split(',')
+            .map((t: string) => t.trim())
+            .filter((t: string) => t.length > 0);
+
+          submittedTechs.forEach((t: string) => {
+            this.allKnownTechs.add(t);
+            if (!this.popularTechs.some(pt => pt.toLowerCase() === t.toLowerCase())) {
+              this.popularTechs.unshift(t);
+            }
+          });
+
           (document.getElementById('add-project-form') as HTMLFormElement)?.reset();
+          this.renderPopularTech(this.popularTechs);
+          this.renderModalTechSuggestions();
+
           await this.loadInitialData();
 
           setTimeout(() => {
