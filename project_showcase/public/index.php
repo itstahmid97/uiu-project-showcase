@@ -392,7 +392,7 @@
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         <div>
                             <label for="new-project-leader-name" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Team Leader Name *</label>
-                            <input type="text" id="new-project-leader-name" required placeholder="e.g. Tanvir Ahmed" class="w-full text-xs px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-orange-500 dark:text-white focus:outline-none">
+                            <input type="text" id="new-project-leader-name" required placeholder="e.g. Abdullah Al Noman" class="w-full text-xs px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-orange-500 dark:text-white focus:outline-none">
                         </div>
                         <div>
                             <label for="new-project-leader-id" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Student ID *</label>

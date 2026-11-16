@@ -12,9 +12,9 @@
 *(Varsity Project Showcase, Awards, and Idea Repository)*
 
 **Submitted By:**
-- **S M Tahmid Hasan Shahria** — ID: `011 221 002` — Section: `P`
-- **Tanvir Ahmed** — ID: `011 221 001` — Section: `P`
-- **Farzana Akter** — ID: `011 221 003` — Section: `P`
+- [Student 1 Name] — ID: [Student ID] — Section: P
+- [Student 2 Name] — ID: [Student ID] — Section: P
+- [Student 3 Name] — ID: [Student ID] — Section: P
 
 **Submitted To:**
 - **Abu Bakar Fahad**  
@@ -271,9 +271,9 @@ The **UIU Project Showcase & Archive System** successfully fulfills all technica
 
 | Student Name | Student ID | Specific Contribution |
 | :--- | :--- | :--- |
-| **S M Tahmid Hasan Shahria** | `011 221 002` | Database 3NF Architecture, Trigger Implementation, SQL Performance Tuning, and Viva Voce Query Explorer Engine |
-| **Tanvir Ahmed** | `011 221 001` | Backend PHP PDO API Development, Security Prepared Statements, and Seed Dataset Curation |
-| **Farzana Akter** | `011 221 003` | Frontend TypeScript & Tailwind UI Development, Filter Synchronization, and Comprehensive Project Report Writing |
+| **[Student 1 Name]** | `[Student ID]` | Database 3NF Architecture, Trigger Implementation, SQL Performance Tuning, and Viva Voce Query Explorer Engine |
+| **[Student 2 Name]** | `[Student ID]` | Backend PHP PDO API Development, Security Prepared Statements, and Seed Dataset Curation |
+| **[Student 3 Name]** | `[Student ID]` | Frontend TypeScript & Tailwind UI Development, Filter Synchronization, and Comprehensive Project Report Writing |
 
 ---
 *Report Generated for UIU CSE 3522 Project Evaluation — Academic Year 2026*
