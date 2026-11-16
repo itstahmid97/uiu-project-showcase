@@ -1,174 +1,168 @@
-/* ==============================================================================
-   UIU Project Showcase & Archive System
-   CSE 3522: Database Management Systems Laboratory
-   Custom Stylesheet & Design System
-   ============================================================================== */
+/*
+ * UIU Project Showcase & Archive System
+ * Custom Design System & Responsive Styles
+ * CSE 3522: Database Management Systems Laboratory
+ */
 
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
 :root {
-    --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-    --uiu-orange: #ea580c;
-    --uiu-orange-light: #f97316;
-    --uiu-orange-soft: #fff7ed;
+  --primary: #ea580c;
+  --primary-hover: #c2410c;
+  --primary-light: #fff7ed;
+  --font-main: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  --font-code: 'JetBrains Mono', monospace;
 }
 
 html {
-    font-family: var(--font-sans);
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    text-rendering: optimizeLegibility;
+  font-family: var(--font-main);
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
 }
 
 code, pre, .font-mono {
-    font-family: var(--font-mono);
+  font-family: var(--font-code);
 }
 
-/* --------------------------------------------------------------------------
-   Sleek Glassmorphic Panels
-   -------------------------------------------------------------------------- */
-.glass-nav {
-    background: rgba(255, 255, 255, 0.88);
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
+/* Background grid accent */
+.bg-grid-pattern {
+  background-size: 24px 24px;
+  background-image: radial-gradient(rgba(100, 116, 139, 0.12) 1px, transparent 1px);
+}
+.dark .bg-grid-pattern {
+  background-image: radial-gradient(rgba(148, 163, 184, 0.08) 1px, transparent 1px);
 }
 
-.dark .glass-nav {
-    background: rgba(15, 23, 42, 0.88);
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
+/* Glassmorphism navigation bar */
+.glass-header {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+.dark .glass-header {
+  background: rgba(15, 23, 42, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
 }
 
-/* --------------------------------------------------------------------------
-   Custom Subtle Scrollbars
-   -------------------------------------------------------------------------- */
+/* Subtle glow orb in Hero */
+.hero-glow {
+  position: absolute;
+  top: -120px;
+  right: 10%;
+  width: 450px;
+  height: 450px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(234, 88, 12, 0.15) 0%, rgba(249, 115, 22, 0.05) 50%, transparent 70%);
+  filter: blur(40px);
+  pointer-events: none;
+  z-index: 0;
+}
+.dark .hero-glow {
+  background: radial-gradient(circle, rgba(234, 88, 12, 0.22) 0%, rgba(249, 115, 22, 0.08) 50%, transparent 70%);
+}
+
+/* Card hover animation & elevation */
+.project-card {
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), 
+              box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1), 
+              border-color 0.25s ease;
+}
+.project-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 30px -10px rgba(15, 23, 42, 0.08), 0 8px 12px -4px rgba(15, 23, 42, 0.04);
+}
+.dark .project-card:hover {
+  box-shadow: 0 20px 30px -10px rgba(0, 0, 0, 0.45), 0 8px 12px -4px rgba(0, 0, 0, 0.3);
+}
+
+/* Award Badges */
+.award-pill-gold {
+  background: #fefce8;
+  color: #854d0e;
+  border: 1px solid #fde047;
+}
+.dark .award-pill-gold {
+  background: rgba(113, 63, 18, 0.3);
+  color: #fef08a;
+  border: 1px solid rgba(234, 179, 8, 0.35);
+}
+
+.award-pill-silver {
+  background: #f8fafc;
+  color: #334155;
+  border: 1px solid #cbd5e1;
+}
+.dark .award-pill-silver {
+  background: rgba(51, 65, 85, 0.35);
+  color: #cbd5e1;
+  border: 1px solid rgba(148, 163, 184, 0.3);
+}
+
+.award-pill-purple {
+  background: #faf5ff;
+  color: #6b21a8;
+  border: 1px solid #d8b4fe;
+}
+.dark .award-pill-purple {
+  background: rgba(107, 33, 168, 0.3);
+  color: #e9d5ff;
+  border: 1px solid rgba(192, 132, 252, 0.35);
+}
+
+.award-pill-green {
+  background: #f0fdf4;
+  color: #166534;
+  border: 1px solid #86efac;
+}
+.dark .award-pill-green {
+  background: rgba(22, 101, 52, 0.3);
+  color: #bbf7d0;
+  border: 1px solid rgba(74, 222, 128, 0.35);
+}
+
+/* Modal scale-in animation */
+@keyframes modalPop {
+  0% {
+    opacity: 0;
+    transform: scale(0.96) translateY(8px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+.animate-modal-pop {
+  animation: modalPop 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Custom modern scrollbars */
 ::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
+  width: 6px;
+  height: 6px;
 }
-
 ::-webkit-scrollbar-track {
-    background: transparent;
+  background: transparent;
 }
-
 ::-webkit-scrollbar-thumb {
-    background: #cbd5e1;
-    border-radius: 9999px;
+  background: #cbd5e1;
+  border-radius: 9999px;
 }
-
 ::-webkit-scrollbar-thumb:hover {
-    background: #94a3b8;
+  background: #94a3b8;
 }
-
 .dark ::-webkit-scrollbar-thumb {
-    background: #334155;
+  background: #334155;
 }
-
 .dark ::-webkit-scrollbar-thumb:hover {
-    background: #475569;
+  background: #475569;
 }
 
-/* Hide scrollbar for horizontal scrolling tabs while keeping scrollability */
+/* Horizontal scrollbar hiding utility */
 .no-scrollbar::-webkit-scrollbar {
-    display: none;
+  display: none;
 }
 .no-scrollbar {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-}
-
-/* --------------------------------------------------------------------------
-   Project Card Elevation & Hover Dynamics
-   -------------------------------------------------------------------------- */
-.project-card {
-    transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1),
-                box-shadow 0.22s cubic-bezier(0.16, 1, 0.3, 1),
-                border-color 0.22s ease;
-}
-
-.project-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 16px 32px -8px rgba(15, 23, 42, 0.08), 0 4px 12px -2px rgba(15, 23, 42, 0.04);
-}
-
-.dark .project-card:hover {
-    box-shadow: 0 16px 32px -8px rgba(0, 0, 0, 0.45), 0 4px 12px -2px rgba(0, 0, 0, 0.3);
-}
-
-/* --------------------------------------------------------------------------
-   Academic & Distinction Badges (Refined, Non-AI Look)
-   -------------------------------------------------------------------------- */
-.badge-award-1st {
-    background: #fefce8;
-    color: #854d0e;
-    border: 1px solid #fde047;
-}
-.dark .badge-award-1st {
-    background: rgba(113, 63, 18, 0.25);
-    color: #fef08a;
-    border: 1px solid rgba(234, 179, 8, 0.4);
-}
-
-.badge-award-2nd {
-    background: #f8fafc;
-    color: #334155;
-    border: 1px solid #cbd5e1;
-}
-.dark .badge-award-2nd {
-    background: rgba(51, 65, 85, 0.35);
-    color: #cbd5e1;
-    border: 1px solid rgba(148, 163, 184, 0.3);
-}
-
-.badge-award-3rd {
-    background: #fff7ed;
-    color: #9a3412;
-    border: 1px solid #fdba74;
-}
-.dark .badge-award-3rd {
-    background: rgba(154, 52, 18, 0.25);
-    color: #fed7aa;
-    border: 1px solid rgba(249, 115, 22, 0.35);
-}
-
-.badge-award-best {
-    background: #faf5ff;
-    color: #6b21a8;
-    border: 1px solid #d8b4fe;
-}
-.dark .badge-award-best {
-    background: rgba(107, 33, 168, 0.25);
-    color: #e9d5ff;
-    border: 1px solid rgba(192, 132, 252, 0.35);
-}
-
-.badge-award-innovation {
-    background: #f0fdf4;
-    color: #166534;
-    border: 1px solid #86efac;
-}
-.dark .badge-award-innovation {
-    background: rgba(22, 101, 52, 0.25);
-    color: #bbf7d0;
-    border: 1px solid rgba(74, 222, 128, 0.35);
-}
-
-/* --------------------------------------------------------------------------
-   Responsive typography adjustments
-   -------------------------------------------------------------------------- */
-.word-break-academic {
-    overflow-wrap: break-word;
-    word-break: break-word;
-    hyphens: auto;
-}
-
-/* Input focus ring polish */
-.input-base {
-    transition: border-color 0.15s ease, box-shadow 0.15s ease;
-}
-.input-base:focus {
-    outline: none;
-    border-color: #ea580c;
-    box-shadow: 0 0 0 3px rgba(234, 88, 12, 0.15);
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
